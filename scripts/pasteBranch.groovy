@@ -43,11 +43,11 @@ chessTreeSettings = new ChessTreeSettings(this.node.map)
 SUPPORTED_LANGUAGES = chessTreeSettings.SUPPORTED_LANGUAGES
 DICTIONARY = chessTreeSettings.DICTIONARY
 
-LANGUAGE_CURRENT = chessTreeSettings.getProperty("chesstree_language")
+LANGUAGE_CURRENT = chessTreeSettings.get("chesstree_language")
 
 ROOT = this.node.map.root
 
-ROOT_MOVENUMBER = chessTreeSettings.getProperty("chesstree_root_movenumber")
+ROOT_MOVENUMBER = chessTreeSettings.get("chesstree_root_movenumber")
 
 
 
