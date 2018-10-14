@@ -8,7 +8,7 @@ set addonName=chessTree
 set file=%1
 echo. Compiling %file% ...
 
-set libs=%FPInstallDir%\plugins\org.freeplane.plugin.script\lib\groovy-all-2.3.1.jar;%FPInstallDir%\plugins\org.freeplane.plugin.script\lib\plugin-1.5.jar
+set libs=%FPInstallDir%\plugins\org.freeplane.plugin.script\lib\groovy-all-2.3.1.jar;%FPInstallDir%\plugins\org.freeplane.plugin.script\lib\plugin-1.5.jar;%FPInstallDir%\core\org.freeplane.core\lib\freeplaneviewer.jar
 
 java -cp "%libs%" org.codehaus.groovy.tools.FileSystemCompiler ./%file%
 
