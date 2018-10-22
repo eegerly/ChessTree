@@ -1,3 +1,4 @@
+package ChessTree
 class OddsView {
     private nodeList
     private ROOT
