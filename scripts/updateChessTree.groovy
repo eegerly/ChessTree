@@ -27,6 +27,10 @@ import groovy.transform.Field
 import ChessTree.Notation
 import ChessTree.NotationTranslator
 import ChessTree.ChessTreeSettings
+import ChessTree.OddsView
+import ChessTree.ConnectorView
+
+
 
 /*************/
 /** Globals **/
@@ -36,7 +40,6 @@ cts = new ChessTreeSettings(this.node.map)
 DICTIONARY = cts.DICTIONARY
 
 ROOT = this.node.map.root
-
 LANGUAGE_CURRENT = cts.get("chesstree_language")
 NUMBERING_CURRENT = cts.get("chesstree_numbering")
 NAG_CURRENT = cts.get("chesstree_NAG")
@@ -162,22 +165,22 @@ if (vars.dialogResult == 'save&apply') {
     
     if (ODDS_CURRENT != odds_next) {
         oddsView = new OddsView(this.node.map)
-        oddsView.updateCharts()
+        oddsView.updateCharts(odds_next=="show")
     }
     if (CONNECTOR_CURRENT != connector_next) {
         connectorView = new ConnectorView(this.node.map)
-        ConnectorView.updateConnectors()
+        connectorView.updateConnectors(connector_next=="freq")
     }
     
     
     /* Update properties */
-    saveSettings(vars)        
+    saveSettings(vars)
 }
 
 if (vars.dialogResult == 'save') {
     saveSettings(vars)
 }
-
+return 0
 
 /*************/
 /* Functions */
@@ -197,7 +200,7 @@ def saveSettings(vars) {
 
 
 def getNodePlyNumber(node) {
-    return node.getNodeLevel(true) + ROOT_MOVENUMBER*2 - 1 
+    return node.getNodeLevel(true) + ROOT_MOVENUMBER_CURRENT*2 - 1 
     // true : countHidden
 }
 
@@ -229,164 +232,3 @@ def updateNotation(language_next, numbering_next) {
     }
 }
 
-
-class OddsView {
-    private nodeList
-    private ROOT
-    private mapfile
-    private mapfilePath
-    private mapfileName
-    private imgAbsPath
-    private imgRelPath
-
-    def OddsView(map) {
-        /* Setting up internal constants */
-        ROOT = map.root
-        mapfile=map.file
-        mapfilePath = mapfile.parent.replace("\\", "/")
-        mapfileName = mapfile.name.lastIndexOf('.').with {it != -1 ? mapfile.name[0..<it] : mapfile.name}
-        imgAbsPath = mapfilePath + "/img_" + mapfileName
-        imgRelPath = "./img_" + mapfileName
-        dir = new File(imgAbsPath)
-        if (!dir.exists()) {
-            dir.mkdir()
-        }    
-    }
-    def updateCharts() {
-        ROOT.findAllDepthFirst().each {
-            aNode = it    
-            /* Update pie chart for winning odds based on ["Odds"] */
-            if (aNode.attributes.containsKey("Odds")) {
-                if (!(aNode.children.findAll{it.style.name=="Explanation"}?.collect{it.getHtmlText()}[0]?.contains("<img"))) {
-                    /* ["Odds"] order: white, black, draw*/
-                    updateOddsPieChart(aNode)
-                }
-            }
-        }    
-    }
-    /*
-    Google chart API:
-    https://developers.google.com/chart/image/docs/gallery/pie_charts#gcharts_chart_margins
-    */
-    private updateOddsPieChart(aNode) {
-        /* ["Odds"] order: white, black, draw*/
-        odds=aNode["Odds"].split(",")
-       
-        chartData=odds.reverse().join(",") /* chartData order: draw, black, white*/
-       
-        chartLabels = "|" + odds.reverse()[1..2].join("|") // only white and black
-        // chartLabels = odds.reverse().join("|")
-        chartRotation =  -Math.PI * ( 0.5  + odds[2].toFloat()/100.0)
-       
-        chartURL = """https://chart.googleapis.com/chart""" +
-                """?chs=120x50&cht=p""" +
-                """&chd=t:${chartData}""" +
-                """&chl=${chartLabels}""" +
-                """&chco=555555|000000|DDDDDD""" +
-                """&chp=${chartRotation}""" +
-                //"""&chdlp=b|2,1&chdl=${chartLabels}""" +
-                """&chma=0,0,0,0|0,0""" +
-                """"""
-        // println chartURL
-       
-        oddsFileAbs = "${imgAbsPath}/odds_${aNode.id}.png"
-        oddsFileRel = "${imgRelPath}/odds_${aNode.id}.png"
-        file = new File(oddsFileAbs).newOutputStream() 
-        file << new URL(chartURL).openStream()
-        file.close()
-       
-        aExplanation = aNode.createChild()
-        aExplanation.style.setName("Explanation")
-        aExplanation.text="""<html><body>
-        <img src="${oddsFileRel}">
-        </body></html>"""
-        aExplanation.setFree(true)
-    }        
-}
-
-import org.freeplane.features.link.ConnectorModel
-class ConnectorView {
-    private final MAXWIDTH = 15
-    private final HSHIFT_LIMIT = -50
-    /* Errors */
-    private errors = []
-    private final E_ACCESS_METHOD_GETCONNECTOR = 1
-    private ROOT
-    
-    def ConnectorView(map){
-        ROOT = map.root
-    }
-    
-    def updateConnectors() {
-        ROOT.findAllDepthFirst().each {
-            aNode = it    
-            /* Update edge based on ["Freq"] */
-            if (aNode.attributes.containsKey("Freq")) {
-                updateEdge(aNode);
-            }
-
-            /* Change edge to connector for "(un)wrapped" nodes (with negative (positive) horizontal shift) 
-            with "*moves" style */
-            updateNodeConnector(aNode)
-        }
-    }
-
-
-    private updateEdge(aNode) {
-        width = 0
-        if (aNode.parent != null) { // not the root 
-            width = (aNode["Freq"].toFloat()*MAXWIDTH/100.0).toInteger()
-        }
-        aNode.style.edge.setWidth(width)
-        //println aNode.style.edge.getModel().getDash()
-    }
-
-
-
-    private updateNodeConnector(aNode) {
-        hasConnectorFromParent = aNode.connectorsIn.collect{it.getSource().id == aNode.parent.id}.inject(false){a,b->a||b}
-        hasHiddenEdgeFromParent = aNode.style.edge.type == org.freeplane.features.edge.EdgeStyle.EDGESTYLE_HIDDEN
-        hasMovesStyle = (aNode.hasStyle("White moves") || aNode.hasStyle("Black moves"))
-        hasNegativeHShift = (aNode.getHorizontalShift() < HSHIFT_LIMIT)
-        
-        if (hasNegativeHShift && hasMovesStyle && (!hasHiddenEdgeFromParent || !hasConnectorFromParent)) {
-            aNode.connectorsIn.findAll{it.getSource().id == aNode.parent.id}.each {
-                aNode.removeConnector(it)
-            }
-            
-            conn = aNode.parent.addConnectorTo(aNode)
-
-            conn.setShape("CUBIC_CURVE")
-            conn.setColor(aNode.style.edge.color)
-            conn.setStartArrow(false)
-            conn.setEndArrow(false)
-            
-            def ConnectorModel connModel = null
-            try {
-                connModel = conn.getConnector()
-                if (connModel!=null) {
-                    connModel.setWidth(aNode.style.edge.width)
-                    connModel.setAlpha(255)
-                
-                }
-            } catch (e) {
-                //getConnector cannot be accessed...
-            }
-            vShift = (aNode.getVerticalShift() + aNode.style.getMinNodeWidth())>>1
-            //aNode.children[0].findAllDepthFirst().findAll{it.getHorizontalShift()!=0}.each{if (it.getVerticalShift()) println it.getVerticalShift()}
-            vShiftOffset = aNode.children[0].findAllDepthFirst().findAll{it.getHorizontalShift()!=0}.collect{it.getVerticalShift()}.sum() // children at the topmost position
-            vShiftOffset = (vShiftOffset == null) ? 0:vShiftOffset
-            conn.setInclination([0, vShift-vShiftOffset], [-2*vShiftOffset, -vShift-vShiftOffset])
-            aNode.style.edge.type = org.freeplane.features.edge.EdgeStyle.EDGESTYLE_HIDDEN    
-        }
-        if (!hasNegativeHShift && hasMovesStyle && (hasHiddenEdgeFromParent || hasConnectorFromParent)) {
-            //aNode.style.name=null
-            aNode.style.edge.type= null
-            aNode.connectorsIn.findAll{it.getSource().id == aNode.parent.id}.each {
-                aNode.removeConnector(it)
-            }        
-        }
-    }
-        
-    
-}

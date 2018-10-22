@@ -47,9 +47,7 @@ LANGUAGE_CURRENT = chessTreeSettings.get("chesstree_language")
 
 ROOT = this.node.map.root
 
-ROOT_MOVENUMBER = chessTreeSettings.get("chesstree_root_movenumber")
-
-
+ROOT_MOVENUMBER = chessTreeSettings.get("chesstree_root_movenumber").toInteger()
 
 /* FUNCTIONS */
 
@@ -220,7 +218,7 @@ while (pgn.length() > 0) {
     
     odds = (comments =~ /(?i)\s*odds\s*:\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*;/)
     if (odds.count>0) {
-        comments = comments.replace(odds[0][0], "")
+        //comments = comments.replace(odds[0][0], "")
         odds = "${odds[0][1]},${odds[0][2]},${odds[0][3]}"
     } else {
         odds = ""
@@ -228,7 +226,7 @@ while (pgn.length() > 0) {
     
     freq = (comments =~ /(?i)\s*freq\s*:\s*(\d+)\s*;/)
     if (freq.count>0) {
-        comments = comments.replace(freq[0][0], "")
+        //comments = comments.replace(freq[0][0], "")
         freq = "${freq[0][1]}"
     } else {
         freq = ""
@@ -236,12 +234,11 @@ while (pgn.length() > 0) {
     
     opening = (comments =~ /(?i)\s*opening\s*:\s*([^;]+)\s*;/)
     if (opening.count>0) {
-        comments = comments.replace(opening[0][0], "")
+        //comments = comments.replace(opening[0][0], "")
         opening = "${opening[0][1]}"
     } else {
         opening = ""
     }
-    
     //println pgnNotation.getMoveNumber() + " _ " + pgnNotation.getMove() + " _ " + pgnNotation.getComment()
     //println "      " + odds + " _ " + freq + " _ " + opening
 
@@ -271,24 +268,25 @@ while (pgn.length() > 0) {
     }
     
     if (opening != "") {
+        currentNode["Opening"] = opening
         if (currentNode.children.findAll{it.style.name=="Opening"}.size() > 0){
             currentNode.children.findAll{it.style.name=="Opening"}[-1].text = opening
         } else {
             opening = currentNode.createChild(opening)
             opening.style.setName("Opening")
+            opening.setFree(true)
         }
     }
     if (odds != "") {
         currentNode["Odds"] = odds
-        //TODO: update oddsNode
+        //TODO: wait for OddsView class, implement here update oddsNode, 
     }
     if (freq != "") {
         currentNode["Freq"] = freq
-        //TODO: update connector
+        //TODO: wait for ConnectorView class, implement here update connector
     }
    
     pgn = pgnNotation.getRemainingText()
-    println "*********************\n${pgn}\n"
 }
 
 
