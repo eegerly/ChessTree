@@ -24,12 +24,13 @@ def class ChessTreeSettings {
     public SUPPORTED_NAG = ["hide":"Hide", "show":"Show"]
     public SUPPORTED_CONNECTOR = ["same":"Same", "freq":"Freq. based"]
     public SUPPORTED_ODDS = ["hide":"Hide", "show":"Show"]
+    public SUPPORTED_BOARDSIZE = ["small":"Small", "medium":"Medium", "large":"Large"]
     private mapProperties
     private supportedProperties = [
         "chesstree_language" : SUPPORTED_LANGUAGES, 
         "chesstree_numbering" : SUPPORTED_NUMBERING, 
         "chesstree_NAG" : SUPPORTED_NAG, 
-        "chesstree_root_movenumber" : ["1" : "1", "\$PATTERN" : ~/[1-9]\d*/], // default is 1, pattern is the second
+        "chesstree_board_size" : SUPPORTED_BOARDSIZE,
         "chesstree_connectors" : SUPPORTED_CONNECTOR, 
         "chesstree_odds" : SUPPORTED_ODDS
     ]

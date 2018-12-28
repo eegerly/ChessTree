@@ -43,7 +43,6 @@ ROOT = this.node.map.root
 LANGUAGE_CURRENT = cts.get("chesstree_language")
 NUMBERING_CURRENT = cts.get("chesstree_numbering")
 NAG_CURRENT = cts.get("chesstree_NAG")
-ROOT_MOVENUMBER_CURRENT = cts.get("chesstree_root_movenumber").toInteger()
 CONNECTOR_CURRENT = cts.get("chesstree_connectors")
 ODDS_CURRENT = cts.get("chesstree_odds")
 
@@ -92,13 +91,7 @@ def dial = s.dialog(title:"ChessTree settings...", id:'myDialog', modal:true,
             label('NAG', preferredSize: [120, 24], mouseClicked:{disableItem(guiCategory)})
 			comboBox(id: 'chesstree_NAG', preferredSize: [100, 24], editable:true,
 				items:cts.SUPPORTED_NAG.collect{it.value}, selectedItem:cts.SUPPORTED_NAG[NAG_CURRENT]) 
-        }  		
-        panel(alignmentX:0f) {
-            flowLayout(alignment:FL.LEFT)
-            label('Root move number', preferredSize: [120, 24], mouseClicked:{disableItem(guiCategory)})
-            spinner(id:'chesstree_root_movenumber',
-                model:spinnerNumberModel(minimum:1, maximum: 100, stepSize:1, value:ROOT_MOVENUMBER_CURRENT ))
-        }  		
+        }  			
         panel(alignmentX:0f) {
             flowLayout(alignment:FL.LEFT)
             label('Connectors', preferredSize: [120, 24], mouseClicked:{disableItem(guiCategory)})
@@ -147,16 +140,12 @@ if (vars.dialogResult == 'save&apply') {
     def language_next = cts.SUPPORTED_LANGUAGES.find{it.value == vars["chesstree_language"].getSelectedItem()}.key
     def numbering_next = cts.SUPPORTED_NUMBERING.find{it.value == vars["chesstree_numbering"].getSelectedItem()}.key
     def NAG_next = cts.SUPPORTED_NAG.find{it.value == vars["chesstree_NAG"].getSelectedItem()}.key
-    def root_movenumber_next = vars["chesstree_root_movenumber"].getValue()
     def connector_next = cts.SUPPORTED_CONNECTOR.find{it.value == vars["chesstree_connectors"].getSelectedItem()}.key
     def odds_next = cts.SUPPORTED_ODDS.find{it.value == vars["chesstree_odds"].getSelectedItem()}.key
 
     if ((LANGUAGE_CURRENT != language_next) || (NUMBERING_CURRENT != numbering_next)) {
         // notation text modification is needed
         updateNotation(language_next, numbering_next)
-    }
-    if (ROOT_MOVENUMBER_CURRENT != root_movenumber_next) {
-        // TODO: update Notation...
     }
     
     if (NAG_CURRENT != NAG_next) {
@@ -188,11 +177,7 @@ return 0
 def saveSettings(vars) {
     cts.getSupportedProperties().each{
         def value = ""
-        if (it == "chesstree_root_movenumber") {
-            value = vars[it].getValue().toString()
-        } else {
-            value = vars[it].getSelectedItem()
-        }
+        value = vars[it].getSelectedItem()
         cts.setByValue(it, value)
     }
     this.node.map.save(true) // true: allow interaction
@@ -200,8 +185,24 @@ def saveSettings(vars) {
 
 
 def getNodePlyNumber(node) {
-    return node.getNodeLevel(true) + ROOT_MOVENUMBER_CURRENT*2 - 1 
-    // true : countHidden
+    def a = node
+    // search for FEN
+    def plyCount = 0
+    while (!a.attributes.containsKey("FEN")) {
+        a=a.parent; plyCount++;
+        if (a==null) return -1;
+    }
+        
+    def m = (a["FEN"] =~ /(?msu).* ([bw]) .* \d+ (\d+)/)
+
+    if (m.size()==0) return -1
+    else {    
+        def moveNumber_afterSP = m[0][2].toInteger()
+        def next_afterSP = m[0][1]
+        def plyCount_afterSP = moveNumber_afterSP*2-1 + (next_afterSP=="w"?0:1)
+        
+        return plyCount_afterSP + plyCount - 1
+    }
 }
 
 def updateNotation(language_next, numbering_next) {

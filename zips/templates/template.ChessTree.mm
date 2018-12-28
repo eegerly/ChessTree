@@ -4,6 +4,8 @@
     <attribute_name MANUAL="true" NAME="Language">
         <attribute_value VALUE="eng"/>
         <attribute_value VALUE="hun"/>
+        <attribute_value VALUE="sym"/>
+        <attribute_value VALUE="fre"/>
     </attribute_name>
 </attribute_registry>
 <node TEXT="ChessTree" LOCALIZED_STYLE_REF="AutomaticLayout.level.root" FOLDED="false" ID="ID_477151011" CREATED="1521278881310" MODIFIED="1540723695481" VGAP_QUANTITY="5.0 pt"><hook NAME="MapStyle">
@@ -148,7 +150,7 @@ else {&#xd;
             </conjunct_condition>
         </conditional_style>
     </conditional_styles>
-    <properties chesstree_NAG="hide" chesstree_odds="show" Language="eng" chesstree_language="eng" show_icon_for_attributes="false" chesstree_numbering="none" fit_to_viewport="false;" chesstree_connectors="freq" chesstree_root_movenumber="1" show_note_icons="true" show_notes_in_map="false"/>
+    <properties chesstree_NAG="hide" chesstree_odds="show" Language="eng" chesstree_language="eng" show_icon_for_attributes="false" chesstree_numbering="none" fit_to_viewport="false;" chesstree_connectors="freq" chesstree_board_size="medium" show_note_icons="true" show_notes_in_map="false"/>
 
 <map_styles>
 <stylenode LOCALIZED_TEXT="styles.root_node" STYLE="oval" UNIFORM_SHAPE="true" VGAP_QUANTITY="24.0 pt">

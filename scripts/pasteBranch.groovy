@@ -47,8 +47,6 @@ LANGUAGE_CURRENT = chessTreeSettings.get("chesstree_language")
 
 ROOT = this.node.map.root
 
-ROOT_MOVENUMBER = chessTreeSettings.get("chesstree_root_movenumber").toInteger()
-
 /* FUNCTIONS */
 
 /* Static functions for ClipBoard handling */ 
@@ -82,8 +80,26 @@ def switchPGNinput() {
 }
 
 def getNodePlyNumber(node) {
-    return node.getNodeLevel(true) + ROOT_MOVENUMBER*2 - 1
+    def a = node
+    // search for FEN
+    def plyCount = 0
+    while (!a.attributes.containsKey("FEN")) {
+        a=a.parent; plyCount++;
+        if (a==null) return -1;
+    }
+        
+    def m = (a["FEN"] =~ /(?msu).* ([bw]) .* \d+ (\d+)/)
+
+    if (m.size()==0) return -1
+    else {    
+        def moveNumber_afterSP = m[0][2].toInteger()
+        def next_afterSP = m[0][1]
+        def plyCount_afterSP = moveNumber_afterSP*2-1 + (next_afterSP=="w"?0:1)
+        
+        return plyCount_afterSP + plyCount - 1
+    }
 }
+
 
 /****************/
 /**** M A I N ***/
