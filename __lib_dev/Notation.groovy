@@ -27,7 +27,7 @@ def class Notation {
         def P_NUMBERING = /\d+\.\s*\.*/ //1., 1.., 1. ., 1..., 1. .., 1.... etc.
         def P_MOVE = /[\u2654-\u265f\w\-=#\+]+/
         def P_COMMENT = /[^}]*/
-        def P_TAG = /\[\s*(\w+)\s+\"([^"]*)\"\s*\]\s*/
+        def P_TAG = /\[\s*(\w+)\s+"([^"]*)"\s*\]\s*/ /* " quotation mark for np++ highlighter  */
         def P_RESULT = /(1\/2-1\/2)|(1-0)|(0-1)|\*/
         def P_ALT_START = /\(+/
         def P_ALT_END = /\)+/
@@ -63,6 +63,7 @@ def class Notation {
             this.piece = ""
             this.comment = ""
         } // if finder.count
+        
         this.remainingText = this.remainingText.drop(this.notation.length())
         
         /* Update position, nextPositionStack */
@@ -80,14 +81,12 @@ def class Notation {
         }
         
         /* Update positionAfterMove */
-        println positionAfterMove.properties.keySet() 
         // copy position ; todo: remove workaround: boardFEN is a method local variable but groovy treats as attribute
         (positionAfterMove.properties.keySet() - ['class', 'metaClass', 'boardFEN']).each{positionAfterMove[it] = position[it]} 
         positionAfterMove.doMove(this.move)
         /* Update nextPositionStack */
         nextPositionStack.push(positionAfterMove)
         this.branchingEnds().times( { nextPositionStack.pop() } )
-        
     } // set
     
     def branchingStarts() {

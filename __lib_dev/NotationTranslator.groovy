@@ -6,9 +6,9 @@ def class NotationTranslator {
     def NotationTranslator(d, s) {
         this.dictionary = d
         this.supportedLanguages = s
-        notation = new Notation("", 0)
+        notation = new Notation("")
     }
-    def setNotation(text, plyNumber) { this.notation.set(text, plyNumber) }
+    def setNotation(text) { this.notation.set(text) }
     def getNotation() { return this.notation }
     
     def translate(fromLang, toLang){

@@ -1,5 +1,7 @@
 package ChessTree
-class PositionInterpreter {
+def class PositionInterpreter {
+    public static final FEN_EMPTY = "8/8/8/8/8/8/8/8 w KQkq - 0 1" // empty board with no move
+    public static final FEN_STARTING = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" // starting position
     def FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
     def nextColor = "w"
     def castleTarget = "KQkq"
@@ -10,7 +12,6 @@ class PositionInterpreter {
     def moveNumber = "0"
     def plyNumber = "0"
     def board = ["rnbqkbnr", "pppppppp", "--------", "--------", "--------", "--------", "PPPPPPPP", "RNBQKBNR"]
-    def private static final FEN_DEFAULT = "8/8/8/8/8/8/8/8 w KQkq - 0 1" // empty board with no move
     def PositionInterpreter(fen) {
         this.set(fen)
     }
@@ -37,7 +38,7 @@ class PositionInterpreter {
             /* Try to get movenumber and color */
             finder = (FEN =~ /(?msu)^.* $P_NEXT .* $P_MOVENUMBER/)
             if (finder.size() == 0) {
-                FEN = FEN_DEFAULT
+                FEN = FEN_EMPTY
             }
             else {
                 FEN = "8/8/8/8/8/8/8/8 ${finder[0][1]} KQkq - 0 ${finder[0][2]}"
@@ -62,7 +63,7 @@ class PositionInterpreter {
     }
     
     def getBoardFEN() {
-        def boardFEN = this.board;
+        def boardFEN = this.board.clone();
         for (def i=0; i<boardFEN.size(); i++) {
             def f = ( boardFEN[i] =~ /-+/ )
             f.each{
@@ -75,17 +76,21 @@ class PositionInterpreter {
     
     def doMove(move) {
         /*********** Update board ***********/
-        /* Special moves : castling */
-        if (move=="0-0") {
-            doCastling("k")
-        } else if (move == "0-0-0" ) {
-            doCastling("q")
-        } else {
-            def piece = ("abcdefgh".contains(move[0])) ? "p" : move[0]
-            piece = (this.nextColor == "w") ? piece.toUpperCase() : piece.toLowerCase()
-            /* Special moves : en passant */
-            //update enPasssantTarget  
-            //update halfMoveClock
+        if (move!=null) {
+            /* Special moves : castling */
+            if (move=="0-0") {
+                doCastling("k")
+            } else if (move == "0-0-0" ) {
+                doCastling("q")
+            } else {
+                if (move != "") {
+                    def piece = ("abcdefgh".contains(move[0])) ? "p" : move[0]
+                    piece = (this.nextColor == "w") ? piece.toUpperCase() : piece.toLowerCase()
+                    /* Special moves : en passant */
+                    //update enPasssantTarget  
+                    //update halfMoveClock
+                }
+            }
         }
         
         /************ Update FEN ***********/

@@ -1,6 +1,5 @@
 package ChessTree
 
-
 def class ChessTreeSettings {
     /* Default setting is the first in each "SUPPORTED_*" attribute */
     public SUPPORTED_LANGUAGES = ["eng":"English", "sym":"Symbolic", "fre":"French", "hun":"Hungarian"]
@@ -42,10 +41,10 @@ def class ChessTreeSettings {
             if (mapProperties.keySet().contains(property)) {
                 // if property does not match regex pattern of any supported value
                 if (supportedValues.find{k,v -> mapProperties[property] ==~ k} == null) {
-                    mapProperties[property] = supportedValues[0].getKey()
+                    mapProperties[property] = supportedValues.keySet()[0]
                 }
             } else { // no such property, set default
-                mapProperties[property] = supportedValues[0].getKey()
+                mapProperties[property] = supportedValues.keySet()[0]
             }
         }
     }
