@@ -29,6 +29,7 @@ import ChessTree.NotationTranslator
 import ChessTree.ChessTreeSettings
 import ChessTree.OddsView
 import ChessTree.ConnectorView
+import ChessTree.PositionInterpreter
 
 
 
@@ -184,52 +185,45 @@ def saveSettings(vars) {
 }
 
 
-def getNodePlyNumber(node) {
-    def a = node
-    // search for FEN
-    def plyCount = 0
-    while (!a.attributes.containsKey("FEN")) {
-        a=a.parent; plyCount++;
-        if (a==null) return -1;
-    }
-        
-    def m = (a["FEN"] =~ /(?msu).* ([bw]) .* \d+ (\d+)/)
 
-    if (m.size()==0) return -1
-    else {    
-        def moveNumber_afterSP = m[0][2].toInteger()
-        def next_afterSP = m[0][1]
-        def plyCount_afterSP = moveNumber_afterSP*2-1 + (next_afterSP=="w"?0:1)
-        
-        return plyCount_afterSP + plyCount - 1
-    }
-}
 
 def updateNotation(language_next, numbering_next) {
-    def translator = new NotationTranslator(DICTIONARY, cts.SUPPORTED_LANGUAGES)
+    def notation = new Notation("", LANGUAGE_CURRENT)
     /* Translate each node */
-    c.findAllDepthFirst().findAll{it.hasStyle("White moves") || it.hasStyle("Black moves")}.each {aNode->
+    c.findAll{it.hasStyle("White moves") || it.hasStyle("Black moves")}.each {aNode->
+        /* Breadth first order guarantees existence FEN tag of parent */
+        def fen = PositionInterpreter.FEN_DEFAULT
+        
+        if (aNode.parent != null ) {
+            if (!aNode.parent.attributes.getNames().contains("FEN")) {
+                aNode.parent["FEN"] = PositionInterpreter.FEN_STARTING
+            } 
+            fen = aNode.parent["FEN"]
+        }
+                
         def text = aNode.getDisplayedText()
         if ((text != null) && (text != "")) {
-            translator.setNotation(text, getNodePlyNumber(aNode)) 
+            notation.position.set(fen)
+            notation.set(text)
         }
         text = "<html><body>"
         if (NUMBERING_CURRENT != numbering_next) {
             if ((numbering_next == "white") && aNode.hasStyle("White moves")) {
-                text += """<p><font size="1">${translator.getNotation().getNumbering()}</font></p>"""
+                text += """<p><font size="1">${notation.getNumbering()}</font></p>"""
             } else if (numbering_next == "both") {
-                text += """<p><font size="1">${translator.getNotation().getNumbering()}</font></p>"""
+                text += """<p><font size="1">${notation.getNumbering()}</font></p>"""
             } else { // "Black moves" and "white", or "none"
                 // nothing to do 
             }
         }
         if (LANGUAGE_CURRENT != language_next) {
-            text += """<p>${translator.translate(LANGUAGE_CURRENT, language_next)}</p>""" // pure notation without numbering
-        } else {
-            text += """<p>${translator.getNotation().getMove()}</p>"""
+            notation.translateTo(language_next)
         }
+        text += """<p>${notation.getMove()}</p>"""
         text += "</body></html>"
+        
         aNode.setText(text)
+        aNode["FEN"] = notation.positionAfterMove
     }
 }
 
