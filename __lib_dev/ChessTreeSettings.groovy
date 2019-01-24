@@ -2,30 +2,15 @@ package ChessTree
 
 def class ChessTreeSettings {
     /* Default setting is the first in each "SUPPORTED_*" attribute */
-    public SUPPORTED_LANGUAGES = ["eng":"English", "sym":"Symbolic", "fre":"French", "hun":"Hungarian"]
-    public DICTIONARY = ["white" : [
-        ["sym":"\u2654", "eng":"K", "fre":"R", "hun":"K" ], // ♔
-        ["sym":"\u2655", "eng":"Q", "fre":"D", "hun":"V" ], // ♕
-        ["sym":"\u2656", "eng":"R", "fre":"T", "hun":"B" ], // ♖
-        ["sym":"\u2657", "eng":"B", "fre":"F", "hun":"F" ], // ♗
-        ["sym":"\u2658", "eng":"N", "fre":"C", "hun":"H" ], // ♘
-        ["sym":"", "eng":"", "fre":"", "hun":"" ]           // ♙
-        ],
-        "black" : [
-        ["sym":"\u265A", "eng":"K", "fre":"R", "hun":"K" ], // ♚
-        ["sym":"\u265B", "eng":"Q", "fre":"D", "hun":"V" ], // ♛
-        ["sym":"\u265C", "eng":"R", "fre":"T", "hun":"B" ], // ♜
-        ["sym":"\u265D", "eng":"B", "fre":"F", "hun":"F" ], // ♝
-        ["sym":"\u265E", "eng":"N", "fre":"C", "hun":"H" ], // ♞
-        ["sym":"", "eng":"", "fre":"", "hun":"" ]           // ♟
-        ]]
-    public SUPPORTED_NUMBERING = ["none":"None", "white":"For white only", "both":"For both"]
-    public SUPPORTED_NAG = ["hide":"Hide", "show":"Show"]
-    public SUPPORTED_CONNECTOR = ["same":"Same", "freq":"Freq. based"]
-    public SUPPORTED_ODDS = ["hide":"Hide", "show":"Show"]
-    public SUPPORTED_BOARDSIZE = ["small":"Small", "medium":"Medium", "large":"Large"]
+    public static final SUPPORTED_LANGUAGES = NotationTranslator.SUPPORTED_LANGUAGES
+    public static final DICTIONARY = NotationTranslator.DICTIONARY
+    public static final SUPPORTED_NUMBERING = ["none":"None", "white":"For white only", "both":"For both"]
+    public static final SUPPORTED_NAG = ["hide":"Hide", "show":"Show"]
+    public static final SUPPORTED_CONNECTOR = ["same":"Same", "freq":"Freq. based"]
+    public static final SUPPORTED_ODDS = ["hide":"Hide", "show":"Show"]
+    public static final SUPPORTED_BOARDSIZE = ["small":"Small", "medium":"Medium", "large":"Large"]
     private mapProperties
-    private supportedProperties = [
+    private static final supportedProperties = [
         "chesstree_language" : SUPPORTED_LANGUAGES, 
         "chesstree_numbering" : SUPPORTED_NUMBERING, 
         "chesstree_NAG" : SUPPORTED_NAG, 

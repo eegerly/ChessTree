@@ -3,27 +3,39 @@ package ChessTree
 def class Notation {
     private notation = ""
     private move = ""
+    private moveEng = "" //for PositionInterpreter.doMove(), 
     private piece = ""
     private comment = ""
     private alternate = ""
     private remainingText = ""
     private tags = [:]
     private result = ""
+    private language = ""
     private PositionInterpreter position
     private PositionInterpreter positionAfterMove
     private nextPositionStack = []
     
     
-    def Notation(String text) {
+    def Notation(String text, lang) {
         position = new PositionInterpreter()
         positionAfterMove = new PositionInterpreter()
+        this.language = lang
         
         this.set(text) // FEN is assumed to be the part of the text
     }
     def resetTags() {
         this.tags = [:]
     }
-    def set(String text) {
+    
+    def translateTo(lang) {
+        NotationTranslator.translateNotation(lang, this)
+    }
+    
+    def setMove(m)      { this.move = m }
+    def setLanguage(l)  { this.language = l }
+    def setPiece(p)     { this.piece = p }
+
+    private parseMoveText(text) {
         def P_NUMBERING = /\d+\.\s*\.*/ //1., 1.., 1. ., 1..., 1. .., 1.... etc.
         def P_MOVE = /[\u2654-\u265f\w\-=#\+]+/
         def P_COMMENT = /[^}]*/
@@ -34,6 +46,30 @@ def class Notation {
         // TODO one line comment with ;comment\n pattern
         // TODO multi level alternate moves
         // TODO Numeric Annotation Glyphs
+        /* Parse move text */
+        def finder = (text =~ /(?msu)^(($P_ALT_START){0,1}\s*($P_NUMBERING){0,1}\s*($P_MOVE)\s*(\{($P_COMMENT)\}){0,1}\s*($P_ALT_END){0,1}\s*)/)
+        if (finder.count > 0) {
+            this.notation = finder[0][1]?:""
+            def numbering = finder[0][3]?:""
+            this.move = finder[0][4]?:""
+            this.comment = finder[0][6]?:""
+            /* Extract piece */
+            this.piece = ("abcdefgh0O".contains(this.move[0])) ? "" : this.move[0]
+            this.alternate = (finder[0][2]?:"") +  (finder[0][7]?:"")
+            this.moveEng = NotationTranslator.getMoveEng(this)
+            
+        } else {
+            this.notation = text // if no notation found, whole text will be dropped
+            this.move = ""
+            this.piece = ""
+            this.comment = ""
+            this.moveEng = ""
+            this.alternate = ""
+        } // if finder.count
+        
+    }
+    
+    def set(String text) {
         this.remainingText = text
         /* Parse tags */
         def hasFEN = false
@@ -47,22 +83,7 @@ def class Notation {
         // if (!this.tags["FEN"]) {/* no action, default FEN will be used, FEN tag is not updated, only position */}
         
         /* Parse move text */
-        def finder = (this.remainingText =~ /(?msu)^(($P_ALT_START){0,1}\s*($P_NUMBERING){0,1}\s*($P_MOVE)\s*(\{($P_COMMENT)\}){0,1}\s*($P_ALT_END){0,1}\s*)/)
-        if (finder.count > 0) {
-            this.notation = finder[0][1]?:""
-            def numbering = finder[0][3]?:""
-            this.move = finder[0][4]?:""
-            this.comment = finder[0][6]?:""
-            /* Extract piece */
-            this.piece = ("abcdefgh0O".contains(this.move[0])) ? "" : this.move[0]
-            this.alternate = (finder[0][2]?:"") +  (finder[0][7]?:"")
-            
-        } else {
-            this.notation = text
-            this.move = ""
-            this.piece = ""
-            this.comment = ""
-        } // if finder.count
+        parseMoveText(this.remainingText)
         
         this.remainingText = this.remainingText.drop(this.notation.length())
         
@@ -76,25 +97,24 @@ def class Notation {
             } else {
                 if (!this.branchingStarts()) {
                     position = nextPositionStack.pop()
-                } // else position is unchanged
+                } // else branching starts: position is unchanged
             }
         }
         
         /* Update positionAfterMove */
         // copy position ; todo: remove workaround: boardFEN is a method local variable but groovy treats as attribute
         (positionAfterMove.properties.keySet() - ['class', 'metaClass', 'boardFEN']).each{positionAfterMove[it] = position[it]} 
-        positionAfterMove.doMove(this.move)
+        positionAfterMove.doMove(this.moveEng)
         /* Update nextPositionStack */
         nextPositionStack.push(positionAfterMove)
-        this.branchingEnds().times( { nextPositionStack.pop() } )
+        this.branchingEnds().times( { nextPositionStack.pop() } ) // pop positions no longer needed
     } // set
     
-    def branchingStarts() {
-        return this.alternate.count("(")
-    }
-    def branchingEnds() {
-        return this.alternate.count(")")
-    }
+    /* Branching counters for current move : can be used as triggers*/
+    def branchingStarts()   { return this.alternate.count("(") }
+    def branchingEnds()     { return this.alternate.count(")") }
+    /* Branch stack counter */
+    def getBranchCount()    { return this.nextPositionStack.size() } // 1(2(3)): (branch of (branch of)) main line; 0: never!
     
     def updatePosition() {
         if (null != this.position) {
@@ -104,6 +124,7 @@ def class Notation {
     
     def getNotation()   { return this.notation }
     def getMove()       { return this.move }
+    def getMoveEng()       { return this.moveEng }
     def getPiece()      { return this.piece }
     def getNumbering()  { return (this.position.moveNumber) + ((this.color=="w") ? "." : "...") }
     def getComment()    { return this.comment }    
@@ -114,5 +135,6 @@ def class Notation {
     def getTag(tag)     { return this.tags.containsKey(tag) ? this.tags[tag] : "" }
     def getTagList()    { return this.tags.keySet()}
     def getRemainingText() { return this.remainingText }
-    def getNextFEN()    {return this.position.FEN }
+    def getNextFEN()    { return this.position.FEN }
+    def getLanguage()   { return language }
 }

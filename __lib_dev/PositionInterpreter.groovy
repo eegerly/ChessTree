@@ -50,7 +50,7 @@ def class PositionInterpreter {
         for ( i=0;i<8;i++) {
             board[i]=finder[0][i+1]
             def j=0
-            for (j=1;j<9;j++) board[i]=board[i].replaceAll(j.toString(),"-"*j)
+            for (j=1;j<9;j++) { board[i]=board[i].replaceAll(j.toString(),"-"*j) }
         }
         nextColor = finder[0][++i]
         castleTarget = finder[0][++i]
@@ -63,14 +63,13 @@ def class PositionInterpreter {
     }
     
     def getBoardFEN() {
-        def boardFEN = this.board.clone();
+        def boardFEN = this.board.clone()
         for (def i=0; i<boardFEN.size(); i++) {
             def f = ( boardFEN[i] =~ /-+/ )
             f.each{
                 boardFEN[i] = boardFEN[i].replaceFirst(it, it.size().toString())
             }
         }
-        boardFEN = boardFEN.join("/")
         return boardFEN.join("/")
     }
     
@@ -125,6 +124,4 @@ def class PositionInterpreter {
         }
         halfMoveClock++
     }
-    
-
 }
