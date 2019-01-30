@@ -9,71 +9,24 @@
     </attribute_name>
 </attribute_registry>
 <node TEXT="ChessTree" LOCALIZED_STYLE_REF="AutomaticLayout.level.root" FOLDED="false" ID="ID_477151011" CREATED="1521278881310" MODIFIED="1540723695481" VGAP_QUANTITY="5.0 pt"><hook NAME="MapStyle">
+<node TEXT="ChessTree" LOCALIZED_STYLE_REF="AutomaticLayout.level.root" FOLDED="false" ID="ID_477151011" CREATED="1521278881310" MODIFIED="1540723475498" VGAP_QUANTITY="5.0 pt"><hook NAME="MapStyle">
     <conditional_styles>
-        <conditional_style ACTIVE="false" LOCALIZED_STYLE_REF="default" LAST="false">
-            <style_equals_condition LOCALIZED_TEXT="default"/>
+        <conditional_style ACTIVE="true" STYLE_REF="Script" LAST="true">
+            <attribute_exists_condition ATTRIBUTE="script1"/>
         </conditional_style>
-        <conditional_style ACTIVE="false" STYLE_REF="White moves" LAST="false">
+        <conditional_style ACTIVE="true" STYLE_REF="White moves" LAST="true">
             <conjunct_condition>
-                <script_condition user_name="IsMove">
-                    <script>P_NUMBERING = /(\d+\.(\.\.)?)/&#xd;
-P_MOVE = /(([0O]-[0O](-[0O])?)|(.?(([a-h][1-8]?)?x?)?[a-h][1-8](=.)?))[\+\#]?/&#xd;
-P_NAG = /((\$\d{1,3})|([^\w]{0,2}))/&#xd;
-notationPattern = /(?msu)^$P_NUMBERING?\s*$P_MOVE\s*$P_NAG?/&#xd;
-&#xd;
-return (this.node.getDisplayedText() ==~ notationPattern)</script>
-                </script_condition>
-                <script_condition>
-                    <script>// IsThisWhite_FEN&#xd;
-def a = this.node &#xd;
-def plyCount = -1&#xd;
-while (!a.attributes.containsKey(&quot;FEN&quot;)) {&#xd;
-    a=a.parent; plyCount++;&#xd;
-    if (a==null) return false;&#xd;
-}&#xd;
-def finder = (a[&quot;FEN&quot;] =~ /(?msu).* ([bw]) .*/)&#xd;
-if (finder.size()==0) return false&#xd;
-else {&#xd;
-    def thisMove = ((finder[0][1] == &quot;w&quot;)?&quot;wb&quot;:&quot;bw&quot;)[plyCount%2]&#xd;
-    if (this.node!=a) this.node[&quot;FEN&quot;] = &quot; wb &quot;-thisMove&#xd;
-    println thisMove&#xd;
-    println this.node[&quot;FEN&quot;]&#xd;
-    return thisMove == &quot;w&quot;&#xd;
-}</script>
-                </script_condition>
+                <attribute_contains_condition ATTRIBUTE="FEN" VALUE=" b " MATCH_CASE="false" MATCH_APPROXIMATELY="false"/>
+                <style_equals_condition LOCALIZED_TEXT="default"/>
             </conjunct_condition>
         </conditional_style>
-        <conditional_style ACTIVE="false" STYLE_REF="Black moves" LAST="false">
+        <conditional_style ACTIVE="true" STYLE_REF="Black moves" LAST="true">
             <conjunct_condition>
-                <script_condition user_name="IsMove">
-                    <script>P_NUMBERING = /(\d+\.(\.\.)?)/&#xd;
-P_MOVE = /(([0O]-[0O](-[0O])?)|(.?(([a-h][1-8]?)?x?)?[a-h][1-8](=.)?))[\+\#]?/&#xd;
-P_NAG = /((\$\d{1,3})|([^\w]{0,2}))/&#xd;
-notationPattern = /(?msu)^$P_NUMBERING?\s*$P_MOVE\s*$P_NAG?/&#xd;
-&#xd;
-return (this.node.getDisplayedText() ==~ notationPattern)</script>
-                </script_condition>
-                <script_condition>
-                    <script>// IsThisBlack_FEN&#xd;
-def a = this.node &#xd;
-def plyCount = -1&#xd;
-while (!a.attributes.containsKey(&quot;FEN&quot;)) {&#xd;
-    a=a.parent; plyCount++;&#xd;
-    if (a==null) return false;&#xd;
-}&#xd;
-def finder = (a[&quot;FEN&quot;] =~ /(?msu).* ([bw]) .*/)&#xd;
-if (finder.size()==0) return false&#xd;
-else {&#xd;
-    def thisMove = ((finder[0][1] == &quot;w&quot;)?&quot;wb&quot;:&quot;bw&quot;)[plyCount%2]&#xd;
-    if (this.node!=a) this.node[&quot;FEN&quot;] = &quot; wb &quot;-thisMove&#xd;
-    println thisMove&#xd;
-    println this.node[&quot;FEN&quot;]&#xd;
-    return thisMove == &quot;b&quot;&#xd;
-}</script>
-                </script_condition>
+                <attribute_contains_condition ATTRIBUTE="FEN" VALUE=" w " MATCH_CASE="false" MATCH_APPROXIMATELY="false"/>
+                <style_equals_condition LOCALIZED_TEXT="default"/>
             </conjunct_condition>
         </conditional_style>
-        <conditional_style ACTIVE="true" STYLE_REF="White moves" LAST="false">
+        <conditional_style ACTIVE="true" STYLE_REF="White moves" LAST="true">
             <conjunct_condition>
                 <script_condition user_name="IsMove">
                     <script>P_NUMBERING = /(\d+\.(\.\.)?)/&#xd;
@@ -111,7 +64,7 @@ else {&#xd;
                 </script_condition>
             </conjunct_condition>
         </conditional_style>
-        <conditional_style ACTIVE="true" STYLE_REF="Black moves" LAST="false">
+        <conditional_style ACTIVE="true" STYLE_REF="Black moves" LAST="true">
             <conjunct_condition>
                 <script_condition user_name="IsMove">
                     <script>P_NUMBERING = /(\d+\.(\.\.)?)/&#xd;
