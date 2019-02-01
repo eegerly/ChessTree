@@ -3,14 +3,12 @@ def class PositionInterpreter {
     public static final FEN_EMPTY = "8/8/8/8/8/8/8/8 w KQkq - 0 1" // empty board with no move
     public static final FEN_STARTING = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" // starting position
     def FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-    def nextColor = "w"
     def castleTarget = "KQkq"
     def enPasssantTarget = "-"
-    def halfMoveClock = "0"
-    def nextMoveNumber = "1"
-    def color = "b"
-    def moveNumber = "0"
-    def plyNumber = "0"
+    def halfMoveClock = 0
+    def color = "w"
+    def moveNumber = 1
+    def plyNumber = 1
     def board = ["rnbqkbnr", "pppppppp", "--------", "--------", "--------", "--------", "PPPPPPPP", "RNBQKBNR"]
     def PositionInterpreter(fen) {
         this.set(fen)
@@ -52,17 +50,17 @@ def class PositionInterpreter {
             def j=0
             for (j=1;j<9;j++) { board[i]=board[i].replaceAll(j.toString(),"-"*j) }
         }
-        nextColor = finder[0][++i]
+        color = finder[0][++i]
         castleTarget = finder[0][++i]
         enPasssantTarget = finder[0][++i]
         halfMoveClock = finder[0][++i].toInteger()
-        nextMoveNumber = finder[0][++i].toInteger()
-        color = "wb"-nextColor
-        moveNumber = nextMoveNumber - ((nextColor=="w")?1:0)
+        moveNumber = finder[0][++i].toInteger()
+        //color = "wb"-nextColor
+        //moveNumber = nextMoveNumber - ((nextColor=="w")?1:0)
         plyNumber = moveNumber*2 - ((color=="w")?1:0)        
     }
     
-    def getBoardFEN() {
+    def board2FEN() {
         def boardFEN = this.board.clone()
         for (def i=0; i<boardFEN.size(); i++) {
             def f = ( boardFEN[i] =~ /-+/ )
@@ -84,7 +82,7 @@ def class PositionInterpreter {
             } else {
                 if (move != "") {
                     def piece = ("abcdefgh".contains(move[0])) ? "p" : move[0]
-                    piece = (this.nextColor == "w") ? piece.toUpperCase() : piece.toLowerCase()
+                    piece = (this.color == "w") ? piece.toUpperCase() : piece.toLowerCase()
                     /* Special moves : en passant */
                     //update enPasssantTarget  
                     //update halfMoveClock
@@ -93,18 +91,18 @@ def class PositionInterpreter {
         }
         
         /************ Update FEN ***********/
-        nextColor = "wb"-nextColor
-        nextMoveNumber += ((nextColor=="w")? 1 : 0)
-        color = "wb"-nextColor
-        moveNumber = nextMoveNumber - ((nextColor=="w")?1:0)
+        //nextColor = "wb"-nextColor
+        //nextMoveNumber += ((nextColor=="w")? 1 : 0)
+        color = "wb"-color
+        moveNumber += ((color=="w")?1:0)
         plyNumber = moveNumber*2 - ((color=="w")?1:0)
+        halfMoveClock += 1
         
-        
-        FEN =  this.getBoardFEN() + " " + nextColor + " " + castleTarget + " " + enPasssantTarget + " " + nextMoveNumber
+        FEN =  this.board2FEN() + " " + color + " " + castleTarget + " " + enPasssantTarget + " " + halfMoveClock + " " + moveNumber
     }
     
     private doCastling(type) {
-        def isNextWhite = (this.nextColor == "w")
+        def isNextWhite = (this.color == "w")
         def isKingSide = type.toLowerCase()=="k"
         def castleType =  isNextWhite ? type.toUpperCase() : type.toLowerCase()
         if (this.castleTarget.contains(castleType)) {

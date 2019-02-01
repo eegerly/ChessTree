@@ -1,9 +1,9 @@
-<map version="freeplane 1.6.0">
+<map version="freeplane 1.7.0">
 <!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
-<node TEXT="ChessTree" FOLDED="false" ID="ID_1869326925" CREATED="1521562113754" MODIFIED="1540216035211" LINK="http://noUpdateURL.com" BACKGROUND_COLOR="#97c7dc" STYLE="oval">
+<node TEXT="ChessTree" FOLDED="false" ID="ID_1869326925" CREATED="1521562113754" MODIFIED="1549009837144" LINK="http://noUpdateURL.com" BACKGROUND_COLOR="#97c7dc" STYLE="oval">
 <font SIZE="16" BOLD="true" ITALIC="true"/>
 <hook NAME="MapStyle">
-    <properties show_icon_for_attributes="true" fit_to_viewport="false" show_note_icons="true" edgeColorConfiguration="#808080ff,#ff0000ff,#0000ffff,#00ff00ff,#ff00ffff,#00ffffff,#7c0000ff,#00007cff,#007c00ff,#7c007cff,#007c7cff,#7c7c00ff"/>
+    <properties fit_to_viewport="false" show_icon_for_attributes="true" show_note_icons="true" edgeColorConfiguration="#808080ff,#ff0000ff,#0000ffff,#00ff00ff,#ff00ffff,#00ffffff,#7c0000ff,#00007cff,#007c00ff,#7c007cff,#007c7cff,#7c7c00ff"/>
 
 <map_styles>
 <stylenode LOCALIZED_TEXT="styles.root_node" STYLE="oval" UNIFORM_SHAPE="true" VGAP_QUANTITY="24.0 pt">
@@ -68,7 +68,7 @@
 <attribute NAME="name" VALUE="chessTree"/>
 <attribute NAME="version" VALUE="0.0.1"/>
 <attribute NAME="author" VALUE="Gergely Kiss"/>
-<attribute NAME="freeplaneVersionFrom" VALUE="1.6.4"/>
+<attribute NAME="freeplaneVersionFrom" VALUE="1.7.4"/>
 <attribute NAME="freeplaneVersionTo" VALUE=""/>
 <attribute NAME="updateUrl" VALUE="http://noUpdateURL.com" OBJECT="java.net.URI|http://noUpdateURL.com"/>
 <richcontent TYPE="NOTE">
@@ -106,7 +106,6 @@
     </ul>
   </body>
 </html>
-
 </richcontent>
 <node TEXT="description" POSITION="left" ID="ID_752418840" CREATED="1521562135104" MODIFIED="1540216035317">
 <edge COLOR="#ff0000"/>
@@ -128,7 +127,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 <node ID="ID_281132702" CREATED="1521563587956" MODIFIED="1521563734014"><richcontent TYPE="NODE">
 
@@ -169,7 +167,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 </node>
 <node TEXT="license" FOLDED="true" POSITION="left" ID="ID_1331637895" CREATED="1521562135113" MODIFIED="1540216035338">
@@ -192,7 +189,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 <node TEXT="&#xa;This add-on is free software: you can redistribute it and/or modify&#xa;it under the terms of the GNU General Public License as published by&#xa;the Free Software Foundation, either version 2 of the License, or&#xa;(at your option) any later version.&#xa;&#xa;This program is distributed in the hope that it will be useful,&#xa;but WITHOUT ANY WARRANTY; without even the implied warranty of&#xa;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the&#xa;GNU General Public License for more details.&#xa;" ID="ID_1555852289" CREATED="1521562135117" MODIFIED="1521566722845"/>
 </node>
@@ -213,7 +209,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 </node>
 <node TEXT="default.properties" POSITION="left" ID="ID_1494843788" CREATED="1521562135125" MODIFIED="1540216035353">
@@ -230,7 +225,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 </node>
 <node TEXT="translations" POSITION="left" ID="ID_461099033" CREATED="1521562135130" MODIFIED="1540216035360">
@@ -258,7 +252,6 @@
     </ul>
   </body>
 </html>
-
 </richcontent>
 <node TEXT="en" ID="ID_1779268052" CREATED="1521562135133" MODIFIED="1540215919911" MAX_WIDTH="322.49999056756525 pt" MIN_WIDTH="322.49999056756525 pt">
 <attribute_layout NAME_WIDTH="155.99999535083785 pt" VALUE_WIDTH="123.74999631196272 pt"/>
@@ -281,7 +274,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 <attribute_layout NAME_WIDTH="52.499998435378124 pt" VALUE_WIDTH="271.4999919086697 pt"/>
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}.script.xml"/>
@@ -412,7 +404,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 <node TEXT="pasteBranch.groovy" ID="ID_1708118480" CREATED="1522494712280" MODIFIED="1522494830917">
 <attribute_layout NAME_WIDTH="146.2499956414105 pt" VALUE_WIDTH="134.9999959766866 pt"/>
@@ -477,7 +468,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 </node>
 <node TEXT="zips" POSITION="right" ID="ID_188436602" CREATED="1521562135191" MODIFIED="1540216035581">
@@ -518,7 +508,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 <node TEXT="templates" ID="ID_1849114914" CREATED="1521565216661" MODIFIED="1521565216662"/>
 <node TEXT="lib" ID="ID_1750925238" CREATED="1522351097503" MODIFIED="1522351097505"/>
@@ -557,7 +546,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 </node>
 </node>

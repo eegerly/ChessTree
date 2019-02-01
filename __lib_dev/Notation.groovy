@@ -13,8 +13,8 @@ def class Notation {
     private language = ""
     private PositionInterpreter position
     private PositionInterpreter positionAfterMove
-    private nextPositionStack = []
-    
+    private nextPosStack = [] //Top of stack: position after recent branch ends and no starts. 
+    private nextPosStackAlt = [] //Top of stack: position after recent branch ends and a new starts.    
     
     def Notation(String text, lang) {
         position = new PositionInterpreter()
@@ -39,15 +39,13 @@ def class Notation {
         def P_NUMBERING = /\d+\.\s*\.*/ //1., 1.., 1. ., 1..., 1. .., 1.... etc.
         def P_MOVE = /[\u2654-\u265f\w\-=#\+]+/
         def P_COMMENT = /[^}]*/
-        def P_TAG = /\[\s*(\w+)\s+"([^"]*)"\s*\]\s*/ /* " quotation mark for np++ highlighter  */
         def P_RESULT = /(1\/2-1\/2)|(1-0)|(0-1)|\*/
-        def P_ALT_START = /\(+/
-        def P_ALT_END = /\)+/
+        def P_ALT_END_START = /[\(\)\s]*/
         // TODO one line comment with ;comment\n pattern
         // TODO multi level alternate moves
         // TODO Numeric Annotation Glyphs
         /* Parse move text */
-        def finder = (text =~ /(?msu)^(($P_ALT_START){0,1}\s*($P_NUMBERING){0,1}\s*($P_MOVE)\s*(\{($P_COMMENT)\}){0,1}\s*($P_ALT_END){0,1}\s*)/)
+        def finder = (text =~ /(?msu)^(($P_ALT_END_START){0,1}\s*($P_NUMBERING){0,1}\s*($P_MOVE)\s*(\{($P_COMMENT)\}){0,1}\s*)/)
         if (finder.count > 0) {
             this.notation = finder[0][1]?:""
             def numbering = finder[0][3]?:""
@@ -55,7 +53,7 @@ def class Notation {
             this.comment = finder[0][6]?:""
             /* Extract piece */
             this.piece = ("abcdefgh0O".contains(this.move[0])) ? "" : this.move[0]
-            this.alternate = (finder[0][2]?:"") +  (finder[0][7]?:"")
+            this.alternate = (finder[0][2]?:"")
             this.moveEng = NotationTranslator.getMoveEng(this)
             
         } else {
@@ -70,6 +68,7 @@ def class Notation {
     }
     
     def set(String text) {
+        def P_TAG = /\[\s*(\w+)\s+"([^"]*)"\s*\]\s*/ /* " quotation mark for np++ highlighter  */
         this.remainingText = text
         /* Parse tags */
         def hasFEN = false
@@ -87,46 +86,66 @@ def class Notation {
         
         this.remainingText = this.remainingText.drop(this.notation.length())
         
-        /* Update position, nextPositionStack */
-        if (hasFEN) {
-            position.set(this.getTag("FEN")) // if no FEN, setter is called with ""
-            nextPositionStack.clear()
-        } else {
-            if (nextPositionStack.isEmpty()) {// called from constructor
-                position.set("") // setter is called with "" --> default FEN
-            } else {
-                if (!this.branchingStarts()) {
-                    position = nextPositionStack.pop()
-                } // else branching starts: position is unchanged
-            }
+        /* Update position, nextPosStack */
+        if (hasFEN) { // Initialize position when FEN tag is received
+            positionAfterMove.set(this.getTag("FEN")) // if no FEN, setter is called with ""
+            // position is set by advancePosition() later
+            nextPosStack.clear()
+            nextPosStackAlt.clear()
+            // TODO: destroy objects in stacks
+        
+        } 
+        /* Process branching */
+        def numOfUnusedBranches = branchingEnds()-branchingStarts()
+        if (numOfUnusedBranches>0) { // Branch ends
+            numOfUnusedBranches.times({
+                position = null
+                position=nextPosStack.pop()
+                def x = nextPosStackAlt.pop()
+                x = null
+                })
         }
         
+        if (branchingStarts()) { // Branch starts : at least one move is assumed after one "(", no consecutive "("-s!
+            if (branchingEnds()) {
+                copyObject(position, nextPosStackAlt[0])
+            } else {
+                nextPosStackAlt.push( new PositionInterpreter())
+                copyObject(nextPosStackAlt[0], position)
+                nextPosStack.push( new PositionInterpreter())
+                copyObject(nextPosStack[0], positionAfterMove)
+            }
+        }
+        if (branchingStarts() + branchingEnds() == 0) { // No branching
+            advancePosition()
+        }        
+        
         /* Update positionAfterMove */
-        // copy position ; todo: remove workaround: boardFEN is a method local variable but groovy treats as attribute
-        (positionAfterMove.properties.keySet() - ['class', 'metaClass', 'boardFEN']).each{positionAfterMove[it] = position[it]} 
-        positionAfterMove.doMove(this.moveEng)
-        /* Update nextPositionStack */
-        nextPositionStack.push(positionAfterMove)
-        this.branchingEnds().times( { nextPositionStack.pop() } ) // pop positions no longer needed
+        updatePositionAfterMove()
     } // set
     
+    private advancePosition() {        
+        copyObject(position, positionAfterMove)
+    }
+    private copyObject(dst, src) {
+        (dst.properties.keySet() - ['class', 'metaClass']).each{dst[it] = src[it]}     
+    }
+    
+    def updatePositionAfterMove() {        
+        copyObject(positionAfterMove, position)
+        positionAfterMove.doMove(this.moveEng)
+    }
     /* Branching counters for current move : can be used as triggers*/
     def branchingStarts()   { return this.alternate.count("(") }
     def branchingEnds()     { return this.alternate.count(")") }
-    /* Branch stack counter */
-    def getBranchCount()    { return this.nextPositionStack.size() } // 1(2(3)): (branch of (branch of)) main line; 0: never!
     
-    def updatePosition() {
-        if (null != this.position) {
-            this.position.doMove(this.move)
-        }
-    }
+
     
     def getNotation()   { return this.notation }
     def getMove()       { return this.move }
     def getMoveEng()       { return this.moveEng }
     def getPiece()      { return this.piece }
-    def getNumbering()  { return (this.position.moveNumber) + ((this.color=="w") ? "." : "...") }
+    def getNumbering()  { return (this.position.moveNumber) + ((this.position.color=="w") ? "." : "...") }
     def getComment()    { return this.comment }    
     def getAlternate()  { return this.alternate }
     def getColor()      { return (this.position.color == "w") ? "white" : "black"}
@@ -135,6 +154,7 @@ def class Notation {
     def getTag(tag)     { return this.tags.containsKey(tag) ? this.tags[tag] : "" }
     def getTagList()    { return this.tags.keySet()}
     def getRemainingText() { return this.remainingText }
-    def getNextFEN()    { return this.position.FEN }
+    def getFEN()        { return this.position.FEN }
+    def getNextFEN()    { return this.positionAfterMove.FEN }
     def getLanguage()   { return language }
 }

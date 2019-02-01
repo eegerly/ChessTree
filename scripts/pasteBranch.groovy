@@ -33,12 +33,12 @@ import java.awt.datatransfer.StringSelection
 import ChessTree.Notation
 import ChessTree.NotationTranslator
 import ChessTree.ChessTreeSettings
+import ChessTree.PositionInterpreter
 
 /*************/
 /** Globals **/
 /*************/
 chessTreeSettings = new ChessTreeSettings(this.node.map)
-
 /* CONSTANTS */ 
 SUPPORTED_LANGUAGES = chessTreeSettings.SUPPORTED_LANGUAGES
 DICTIONARY = chessTreeSettings.DICTIONARY
@@ -50,7 +50,6 @@ ROOT = this.node.map.root
 /* FUNCTIONS */
 
 /* Static functions for ClipBoard handling */ 
-//static void setClipboardContents(final String contents){    Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(contents), null)    }
 static String getClipboardContents(){    return Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null).getTransferData(DataFlavor.stringFlavor)    }
 
 def showPGNFileChooser() {
@@ -79,28 +78,16 @@ def switchPGNinput() {
     guiPGNFolder.enabled = guiPGNFolderRB.selected    
 }
 
-def getNodePlyNumber(node) {
-    def a = node
-    // search for FEN
-    def plyCount = 0
-    while (!a.attributes.containsKey("FEN")) {
-        a=a.parent; plyCount++;
-        if (a==null) return -1;
-    }
-        
-    def m = (a["FEN"] =~ /(?msu).* ([bw]) .* \d+ (\d+)/)
-
-    if (m.size()==0) return -1
-    else {    
-        def moveNumber_afterSP = m[0][2].toInteger()
-        def next_afterSP = m[0][1]
-        def plyCount_afterSP = moveNumber_afterSP*2-1 + (next_afterSP=="w"?0:1)
-        
-        return plyCount_afterSP + plyCount - 1
-    }
+def getNodeNotation(aNode) { // not used // FEN is retrieved from PGN notation, not needed for nodeNotation
+    def nn = "[FEN \""
+    nn += aNode.attributes.containsKey("FEN") ? aNode["FEN"] : ""
+    nn += "\"] " + aNode.getDisplayedText()
+    return nn
 }
 
-
+def getNodeFEN(aNode) {
+    return aNode.attributes.containsKey("FEN") ? aNode["FEN"] : PositionInterpreter.FEN_STARTING
+}
 /****************/
 /**** M A I N ***/
 /****************/
@@ -183,51 +170,36 @@ if (vars.dialogResult == 'paste') {
 
 
 /* Initialization */
-pgnNotation = new Notation(pgn)
-nodeNotation = new Notation(this.node.getDisplayedText(), getNodePlyNumber(this.node))
+def translationNeeded = (PGN_LANGUAGE != LANGUAGE_CURRENT)
+def nextNodeStack = []
+def nextNodeStackAlt = []
+
+def pgnNotation = new Notation(pgn, PGN_LANGUAGE)
+def nodeNotation = new Notation(this.node.getDisplayedText(), LANGUAGE_CURRENT) // FEN is retrieved from PGN notation, not needed for nodeNotation
 
 /* Determine starting node */
-// First check this.node
-currentNode = null
-if ((pgnNotation.getPlyNumber() != nodeNotation.getPlyNumber()) || 
-    (pgnNotation.getMove() != nodeNotation.getMove())) {
-    currentNode = c.findAll().find{ //breadth first order
-        nodeNotation.set(it.getDisplayedText(), getNodePlyNumber(it))
-        if (pgnNotation.getPlyNumber() < nodeNotation.getPlyNumber()) {
-            return false // node's plyNumber is over notation's (breadth first!)
-        }
-        if ((pgnNotation.getPlyNumber() == nodeNotation.getPlyNumber()) &&
-            (pgnNotation.getMove() == nodeNotation.getMove())) {
-            return true // found
-        } else {
-            return false // not found
-        }
+// Search for starting node with ancestors first order 
+def currentNode = this.node
+while (pgnNotation.getTag("FEN") != getNodeFEN(currentNode)) {
+    currentNode = currentNode.parent
+    if (currentNode == null) {
+        break;
     }
-} else {
-    currentNode = this.node
 }
 
 if (currentNode == null) {
-    return -1 // no matching node found
+    currentNode = this.node.createChild("Starting position") // no matching node found
+    currentNode.style.setName("Starting position")
+    currentNode["FEN"] = pgnNotation.position.FEN
 }
 
-
-// printNotation()
-pgn = pgnNotation.getRemainingText()
-
-
-translator = new NotationTranslator(DICTIONARY, SUPPORTED_LANGUAGES)
-
-translationNeeded = (PGN_LANGUAGE != LANGUAGE_CURRENT)
 
 /* Walk through PGN */
 
 while (pgn.length() > 0) {
-    pgnNotation.set(pgn)
-    
     if (pgnNotation.getMove() == "") break;
     
-    //parse comments for Odds, Freq, Opening
+    /* Parse ChessTree specific comment parts: Odds, Freq, Opening */
     comments = pgnNotation.getComment()
     odds = opening = freq = ""
     
@@ -257,12 +229,41 @@ while (pgn.length() > 0) {
     }
     //println pgnNotation.getMoveNumber() + " _ " + pgnNotation.getMove() + " _ " + pgnNotation.getComment()
     //println "      " + odds + " _ " + freq + " _ " + opening
+    println "********************"
+    println pgnNotation.getNumbering() + " " + pgnNotation.getMove()
 
-    // search for matching node for current pgn move 
+    //println pgnNotation.getRemainingText()
+    //println pgnNotation.branchingStarts() + " / " + pgnNotation.branchingEnds()
+
+    /* Handle translated notation within chesstree */
+    if (translationNeeded) {
+        pgnNotation.translateTo(LANGUAGE_CURRENT)
+    }
+    
+    /* Process branching */
+    def numOfUnusedBranches = pgnNotation.branchingEnds()-pgnNotation.branchingStarts()
+    if (numOfUnusedBranches>0) { // Branch ends
+        numOfUnusedBranches.times({
+            currentNode=nextNodeStack.pop()
+            nextNodeStackAlt.pop()
+        })
+    }
+    
+    if (pgnNotation.branchingStarts()) { // Branch starts : at least one move is assumed after one "(", no consecutive "("-s!
+        if (pgnNotation.branchingEnds())
+        {
+            currentNode = nextNodeStackAlt[0]
+        } else {
+            nextNodeStackAlt.push(currentNode.parent)
+            nextNodeStack.push(currentNode)
+            currentNode = currentNode.parent
+        }
+    }
+    
+    /* Search for child node matching moveEng, FEN match is assumed */
     matchingChild = currentNode.children.find {
-        nodeNotation.set(it.getDisplayedText(), getNodePlyNumber(it))
-        if ((pgnNotation.getPlyNumber() == nodeNotation.getPlyNumber()) &&
-            (pgnNotation.getMove() == nodeNotation.getMove())) {
+        nodeNotation.set(it.getDisplayedText()) // FEN is retrieved from PGN notation, not needed for nodeNotation
+        if (pgnNotation.getMoveEng() == nodeNotation.getMoveEng()) {
             return true // found
         } else {
             return false // not found
@@ -270,19 +271,21 @@ while (pgn.length() > 0) {
         
     }
     
+    /* Process pgnNotation : node text */
     if (matchingChild == null) {
         // no mathing child found, create it
         currentNode = currentNode.createChild()
-        def moveText = pgnNotation.getMove()
-        if (translationNeeded) {
-            translator.setNotation(moveText, getNodePlyNumber(currentNode))
-            moveText = translator.translate(PGN_LANGUAGE, LANGUAGE_CURRENT)
-        }
-        currentNode.text = moveText
+        currentNode.text = pgnNotation.getMove()
     } else {
         currentNode = matchingChild // matching child found, advance map processing
     }
     
+    /* Process pgnNotation : node["FEN"] */
+    /* Update FEN from pgn even if matching child was found and its FEN was correct. 
+    FEN counters, enpassant, castling infos are guaranteed by starting position search at script startup. */
+    currentNode["FEN"] = pgnNotation.positionAfterMove.FEN    
+
+    /* Process pgnNotation : opening */
     if (opening != "") {
         currentNode["Opening"] = opening
         if (currentNode.children.findAll{it.style.name=="Opening"}.size() > 0){
@@ -293,16 +296,22 @@ while (pgn.length() > 0) {
             opening.setFree(true)
         }
     }
+    
+    /* Process pgnNotation : odds */
     if (odds != "") {
         currentNode["Odds"] = odds
         //TODO: wait for OddsView class, implement here update oddsNode, 
     }
+
+    /* Process pgnNotation : frequency */
     if (freq != "") {
         currentNode["Freq"] = freq
         //TODO: wait for ConnectorView class, implement here update connector
     }
    
+    /* Advance pgnNotation processing */
     pgn = pgnNotation.getRemainingText()
+    pgnNotation.set(pgn)
 }
 
 
