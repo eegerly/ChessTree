@@ -7,6 +7,7 @@ def class Notation {
     private piece = ""
     private comment = ""
     private alternate = ""
+    private nag = ""
     private remainingText = ""
     private tags = [:]
     private result = ""
@@ -21,8 +22,16 @@ def class Notation {
         positionAfterMove = new PositionInterpreter()
         this.language = lang
         
-        this.set(text) // FEN is assumed to be the part of the text
+        this.set(text) // FEN tag may be the part of the text
     }
+    def Notation(String FEN, String text, lang) {
+        position = new PositionInterpreter()
+        positionAfterMove = new PositionInterpreter()
+        this.language = lang
+        
+        this.setWithFEN(FEN, text) // FEN tag should not be the part of the text
+    }
+    
     def resetTags() {
         this.tags = [:]
     }
@@ -41,19 +50,21 @@ def class Notation {
         def P_COMMENT = /[^}]*/
         def P_RESULT = /(1\/2-1\/2)|(1-0)|(0-1)|\*/
         def P_ALT_END_START = /[\(\)\s]*/
+        def P_NAG = /\$\d+/
         // TODO one line comment with ;comment\n pattern
         // TODO multi level alternate moves
         // TODO Numeric Annotation Glyphs
         /* Parse move text */
-        def finder = (text =~ /(?msu)^(($P_ALT_END_START){0,1}\s*($P_NUMBERING){0,1}\s*($P_MOVE)\s*(\{($P_COMMENT)\}){0,1}\s*)/)
+        def finder = (text =~ /(?msu)^(($P_ALT_END_START){0,1}\s*($P_NUMBERING){0,1}\s*($P_MOVE)\s*($P_NAG){0,1}\s*(\{($P_COMMENT)\}){0,1}\s*)/)
         if (finder.count > 0) {
             this.notation = finder[0][1]?:""
             def numbering = finder[0][3]?:""
             this.move = finder[0][4]?:""
-            this.comment = finder[0][6]?:""
+            this.comment = finder[0][7]?:""
             /* Extract piece */
             this.piece = ("abcdefgh0O".contains(this.move[0])) ? "" : this.move[0]
             this.alternate = (finder[0][2]?:"")
+            this.nag = (finder[0][5]?:"")
             this.moveEng = NotationTranslator.getMoveEng(this)
             
         } else {
@@ -63,8 +74,12 @@ def class Notation {
             this.comment = ""
             this.moveEng = ""
             this.alternate = ""
+            this.nag = ""
         } // if finder.count
         
+    }
+    def setWithFEN(String FEN, String text) {
+        set("[FEN \"${FEN?:''}\"] ${text}")
     }
     
     def set(String text) {
@@ -148,6 +163,7 @@ def class Notation {
     def getNumbering()  { return (this.position.moveNumber) + ((this.position.color=="w") ? "." : "...") }
     def getComment()    { return this.comment }    
     def getAlternate()  { return this.alternate }
+    def getNAG()        { return this.nag }    
     def getColor()      { return (this.position.color == "w") ? "white" : "black"}
     def getMoveNumber() { return this.position.moveNumber}
     def getPlyNumber()  { return this.position.plyNumber }

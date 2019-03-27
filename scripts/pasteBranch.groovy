@@ -86,7 +86,7 @@ def getNodeNotation(aNode) { // not used // FEN is retrieved from PGN notation, 
 }
 
 def getNodeFEN(aNode) {
-    return aNode.attributes.containsKey("FEN") ? aNode["FEN"] : PositionInterpreter.FEN_STARTING
+    return aNode.attributes.containsKey("FEN") ? aNode["FEN"] : ""//: PositionInterpreter.FEN_STARTING
 }
 /****************/
 /**** M A I N ***/
@@ -180,12 +180,13 @@ def nodeNotation = new Notation(this.node.getDisplayedText(), LANGUAGE_CURRENT) 
 /* Determine starting node */
 // Search for starting node with ancestors first order 
 def currentNode = this.node
-while (pgnNotation.getTag("FEN") != getNodeFEN(currentNode)) {
+while (pgnNotation.getFEN() != getNodeFEN(currentNode)) {
     currentNode = currentNode.parent
     if (currentNode == null) {
         break;
     }
 }
+
 
 if (currentNode == null) {
     currentNode = this.node.createChild("Starting position") // no matching node found
@@ -206,7 +207,7 @@ while (pgn.length() > 0) {
     
     odds = (comments =~ /(?i)\s*odds\s*:\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*;/)
     if (odds.count>0) {
-        //comments = comments.replace(odds[0][0], "")
+        comments = comments.replace(odds[0][0], "")
         odds = "${odds[0][1]},${odds[0][2]},${odds[0][3]}"
     } else {
         odds = ""
@@ -214,7 +215,7 @@ while (pgn.length() > 0) {
     
     freq = (comments =~ /(?i)\s*freq\s*:\s*(\d+)\s*;/)
     if (freq.count>0) {
-        //comments = comments.replace(freq[0][0], "")
+        comments = comments.replace(freq[0][0], "")
         freq = "${freq[0][1]}"
     } else {
         freq = ""
@@ -222,11 +223,14 @@ while (pgn.length() > 0) {
     
     opening = (comments =~ /(?i)\s*opening\s*:\s*([^;]+)\s*;/)
     if (opening.count>0) {
-        //comments = comments.replace(opening[0][0], "")
+        comments = comments.replace(opening[0][0], "")
         opening = "${opening[0][1]}"
     } else {
         opening = ""
     }
+    
+    nag = pgnNotation.getNAG()
+    
     //println pgnNotation.getMoveNumber() + " _ " + pgnNotation.getMove() + " _ " + pgnNotation.getComment()
     //println "      " + odds + " _ " + freq + " _ " + opening
     println "********************"
@@ -296,7 +300,6 @@ while (pgn.length() > 0) {
             opening.setFree(true)
         }
     }
-    
     /* Process pgnNotation : odds */
     if (odds != "") {
         currentNode["Odds"] = odds
@@ -307,6 +310,23 @@ while (pgn.length() > 0) {
     if (freq != "") {
         currentNode["Freq"] = freq
         //TODO: wait for ConnectorView class, implement here update connector
+    }
+    /* Process pgnNotation : nag */
+    if (nag != "") {
+        currentNode["NAG"] = nag
+        def nagTxt = NotationTranslator.getNAG((nag-"\$").toInteger(), "sym")
+        if (currentNode.details) {
+            currentNode.setDetailsText("${currentNode.details.to.plain}\n${nagTxt}")
+        } else {
+            currentNode.setDetailsText(nagTxt)
+        }
+    }   
+    /* Process pgnNotation : opening */
+    if (comments != "") {
+        commentsNode = currentNode.createChild("")
+        commentsNode.style.setName("Explanation")
+        commentsNode.setFree(true)
+        commentsNode.setDetailsText(comments)
     }
    
     /* Advance pgnNotation processing */

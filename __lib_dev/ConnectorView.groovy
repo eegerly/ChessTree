@@ -1,12 +1,14 @@
 package ChessTree
 import org.freeplane.features.link.ConnectorModel
+//import org.freeplane.features.edge.EdgeStyle
+
 class ConnectorView {
-    private final MAXWIDTH = 15
-    private final HSHIFT_LIMIT = -50
+    private static final MAXWIDTH = 15
+    private static final HSHIFT_LIMIT = -50
     /* Errors */
-    private errors = []
-    private final E_ACCESS_METHOD_GETCONNECTOR = 1
-    private ROOT
+    private static errors = []
+    private static final E_ACCESS_METHOD_GETCONNECTOR = 1
+    private static ROOT
     
     def ConnectorView(map){
         ROOT = map.root
@@ -21,7 +23,10 @@ class ConnectorView {
 
             /* Change edge to connector for "(un)wrapped" nodes (with negative (positive) horizontal shift) 
             with "*moves" style */
-            updateNodeConnector(aNode)
+            def hasMovesStyle = (aNode.hasStyle("White moves") || aNode.hasStyle("Black moves"))
+            if (hasMovesStyle) {
+                updateNodeConnector(aNode)
+            }
         }
     }
 
@@ -37,13 +42,18 @@ class ConnectorView {
 
 
 
-    private updateNodeConnector(aNode) {
+    public static updateNodeConnector(aNode) {
         def hasConnectorFromParent = aNode.connectorsIn.collect{it.getSource().id == aNode.parent.id}.inject(false){a,b->a||b}
-        def hasHiddenEdgeFromParent = aNode.style.edge.type == org.freeplane.features.edge.EdgeStyle.EDGESTYLE_HIDDEN
-        def hasMovesStyle = (aNode.hasStyle("White moves") || aNode.hasStyle("Black moves"))
+        def hasHiddenEdgeFromParent = aNode.style.edge.getType().name == "hide_edge" //org.freeplane.features.edge.EdgeStyle.EDGESTYLE_HIDDEN
         def hasNegativeHShift = (aNode.getHorizontalShift() < HSHIFT_LIMIT)
         
-        if (hasNegativeHShift && hasMovesStyle && (!hasHiddenEdgeFromParent || !hasConnectorFromParent)) {
+        println "hasConnectorFromParent : " + hasConnectorFromParent
+        println "hasHiddenEdgeFromParent : " + hasHiddenEdgeFromParent
+        println "hasNegativeHShift : " + hasNegativeHShift
+        
+        /* Node's position : left to its parent AND 
+           Connector or edge style is normal */
+        if (hasNegativeHShift && (!hasHiddenEdgeFromParent || !hasConnectorFromParent)) {
             aNode.connectorsIn.findAll{it.getSource().id == aNode.parent.id}.each {
                 aNode.removeConnector(it)
             }
@@ -59,26 +69,41 @@ class ConnectorView {
             try {
                 connModel = conn.getConnector()
                 if (connModel!=null) {
-                    connModel.setWidth(aNode.style.edge.width)
+                    connModel.setWidth(aNode.style.edge.width?:1)
                     connModel.setAlpha(255)
 
                 }
             } catch (e) {
                 //getConnector cannot be accessed...
             }
-            def vShift = (aNode.getVerticalShift() + aNode.style.getMinNodeWidth())>>1
-            //aNode.children[0].findAllDepthFirst().findAll{it.getHorizontalShift()!=0}.each{if (it.getVerticalShift()) println it.getVerticalShift()}
-            def vShiftOffset = aNode.children[0].findAllDepthFirst().findAll{it.getHorizontalShift()!=0}.collect{it.getVerticalShift()}.sum() // children at the topmost position
-            vShiftOffset = (vShiftOffset == null) ? 0:vShiftOffset
-            conn.setInclination([0, vShift-vShiftOffset], [-2*vShiftOffset, -vShift-vShiftOffset])
-            aNode.style.edge.type = org.freeplane.features.edge.EdgeStyle.EDGESTYLE_HIDDEN    
+            def vShift = aNode.getVerticalShift()
+            //def vShift = (aNode.getVerticalShift() + aNode.style.getMinNodeWidth())>>1
+            //aNode.children[0]?.findAllDepthFirst().findAll{it.getHorizontalShift()!=0}.each{if (it.getVerticalShift()) println it.getVerticalShift()}
+            /* Sum of vertical shift */
+            //def vShiftOffset = aNode.children[0]?.findAllDepthFirst().findAll{it.getHorizontalShift()!=0}.collect{it.getVerticalShift()}.sum() // children at the topmost position
+            //vShiftOffset = (vShiftOffset == null) ? 0:vShiftOffset
+            
+            //conn.setInclination([0, vShift-vShiftOffset], [-2*vShiftOffset, -vShift-vShiftOffset])
+            conn.setInclination([vShift, vShift], [-vShift, -vShift])
+            
+            //aNode.style.edge.type = EdgeStyle.EDGESTYLE_HIDDEN
+            aNode.style.edge.setType("hide_edge")
         }
-        if (!hasNegativeHShift && hasMovesStyle && (hasHiddenEdgeFromParent || hasConnectorFromParent)) {
-            //aNode.style.name=null
-            aNode.style.edge.type= null
+        /* Node's position : right to its parent AND
+           Connector or edge style has not yet been set back (connector based) */
+        if (!hasNegativeHShift && (hasHiddenEdgeFromParent || hasConnectorFromParent)) {
+            //aNode.style.name=""
+            aNode.style.edge.type= "" //reset edge style to default
             aNode.connectorsIn.findAll{it.getSource().id == aNode.parent.id}.each {
                 aNode.removeConnector(it)
             }        
+        }
+        if (hasNegativeHShift && hasConnectorFromParent) {
+            def vShift = aNode.getVerticalShift()
+
+            aNode.connectorsIn.findAll{it.getSource().id == aNode.parent.id}.each {
+                    it.setInclination([vShift, vShift], [-vShift, -vShift])
+                }
         }
     }
         
