@@ -9,7 +9,6 @@
     </attribute_name>
 </attribute_registry>
 <node TEXT="ChessTree" LOCALIZED_STYLE_REF="AutomaticLayout.level.root" FOLDED="false" ID="ID_477151011" CREATED="1521278881310" MODIFIED="1540723695481" VGAP_QUANTITY="5.0 pt"><hook NAME="MapStyle">
-<node TEXT="ChessTree" LOCALIZED_STYLE_REF="AutomaticLayout.level.root" FOLDED="false" ID="ID_477151011" CREATED="1521278881310" MODIFIED="1540723475498" VGAP_QUANTITY="5.0 pt"><hook NAME="MapStyle">
     <conditional_styles>
         <conditional_style ACTIVE="true" STYLE_REF="Script" LAST="true">
             <attribute_exists_condition ATTRIBUTE="script1"/>
@@ -133,7 +132,7 @@ else {&#xd;
 <edge STYLE="bezier" WIDTH="1" DASH="SOLID"/>
 <attribute_layout VALUE_WIDTH="134.9999959766866 pt"/>
 </stylenode>
-<stylenode TEXT="Black moves" COLOR="#000000" BACKGROUND_COLOR="#666666" STYLE="bubble" UNIFORM_SHAPE="true" TEXT_ALIGN="CENTER" VGAP_QUANTITY="5.0 pt" MIN_WIDTH="50.0 px">
+<stylenode TEXT="Black moves" COLOR="#000000" BACKGROUND_COLOR="#999999" STYLE="bubble" UNIFORM_SHAPE="true" TEXT_ALIGN="CENTER" VGAP_QUANTITY="5.0 pt" MIN_WIDTH="50.0 px">
 <font SIZE="12" BOLD="true"/>
 <edge STYLE="bezier" WIDTH="1" DASH="SOLID"/>
 <attribute_layout VALUE_WIDTH="134.9999959766866 pt"/>
