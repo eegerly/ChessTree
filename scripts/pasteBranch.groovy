@@ -78,13 +78,6 @@ def switchPGNinput() {
     guiPGNFolder.enabled = guiPGNFolderRB.selected    
 }
 
-def getNodeNotation(aNode) { // not used // FEN is retrieved from PGN notation, not needed for nodeNotation
-    def nn = "[FEN \""
-    nn += aNode.attributes.containsKey("FEN") ? aNode["FEN"] : ""
-    nn += "\"] " + aNode.getDisplayedText()
-    return nn
-}
-
 def getNodeFEN(aNode) {
     return aNode.attributes.containsKey("FEN") ? aNode["FEN"] : ""//: PositionInterpreter.FEN_STARTING
 }
@@ -178,7 +171,7 @@ def pgnNotation = new Notation(pgn, PGN_LANGUAGE)
 def nodeNotation = new Notation(this.node.getDisplayedText(), LANGUAGE_CURRENT) // FEN is retrieved from PGN notation, not needed for nodeNotation
 
 /* Determine starting node */
-// Search for starting node with ancestors first order 
+// Search for starting node with ancestors first order : only FEN is compared
 def currentNode = this.node
 while (pgnNotation.getFEN() != getNodeFEN(currentNode)) {
     currentNode = currentNode.parent
