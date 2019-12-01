@@ -48,25 +48,22 @@ def class Notation {
         def P_NUMBERING = /\d+\.\s*\.*/ //1., 1.., 1. ., 1..., 1. .., 1.... etc.
         def P_MOVE = /[\u2654-\u265f\w\-=#\+]+/
         def P_COMMENT = /[^}]*/
-        def P_RESULT = /(1\/2-1\/2)|(1-0)|(0-1)|\*/
+        def P_RESULT = /(1\/2-1\/2)|(1-0)|(0-1)|\*/ //currently not used 
         def P_ALT_END_START = /[\(\)\s]*/
         def P_NAG = /\$\d+/
         // TODO one line comment with ;comment\n pattern
-        // TODO multi level alternate moves
-        // TODO Numeric Annotation Glyphs
         /* Parse move text */
-        def finder = (text =~ /(?msu)^(($P_ALT_END_START){0,1}\s*($P_NUMBERING){0,1}\s*($P_MOVE)\s*($P_NAG){0,1}\s*(\{($P_COMMENT)\}){0,1}\s*)/)
+        def finder = (text =~ /(?msu)^(($P_ALT_END_START){0,1}\s*($P_NUMBERING){0,1}\s*($P_MOVE)\s*(($P_NAG\s*)*)(\{($P_COMMENT)\}){0,1}\s*)/)
         if (finder.count > 0) {
             this.notation = finder[0][1]?:""
             def numbering = finder[0][3]?:""
             this.move = finder[0][4]?:""
-            this.comment = finder[0][7]?:""
+            this.comment = finder[0][8]?:""
             /* Extract piece */
             this.piece = ("abcdefgh0O".contains(this.move[0])) ? "" : this.move[0]
             this.alternate = (finder[0][2]?:"")
-            this.nag = (finder[0][5]?:"")
+            this.nag = (finder[0][5]?:"").split(/ +/)
             this.moveEng = NotationTranslator.getMoveEng(this)
-            
         } else {
             this.notation = text // if no notation found, whole text will be dropped
             this.move = ""
@@ -163,7 +160,8 @@ def class Notation {
     def getNumbering()  { return (this.position.moveNumber) + ((this.position.color=="w") ? "." : "...") }
     def getComment()    { return this.comment }    
     def getAlternate()  { return this.alternate }
-    def getNAG()        { return this.nag }    
+    def getNAGs()       { return this.nag}    
+    def getNAGtext()    { return this.nag.join(", ") }    
     def getColor()      { return (this.position.color == "w") ? "white" : "black"}
     def getMoveNumber() { return this.position.moveNumber}
     def getPlyNumber()  { return this.position.plyNumber }
