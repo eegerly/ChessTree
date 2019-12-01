@@ -171,7 +171,7 @@ def pgnNotation = new Notation(pgn, PGN_LANGUAGE)
 def nodeNotation = new Notation(this.node.getDisplayedText(), LANGUAGE_CURRENT) // FEN is retrieved from PGN notation, not needed for nodeNotation
 
 /* Determine starting node */
-// Search for starting node with ancestors first order : only FEN is compared
+// Search for starting node with ancestors first order 
 def currentNode = this.node
 while (pgnNotation.getFEN() != getNodeFEN(currentNode)) {
     currentNode = currentNode.parent
@@ -222,7 +222,7 @@ while (pgn.length() > 0) {
         opening = ""
     }
     
-    nag = pgnNotation.getNAG()
+    nag = pgnNotation.getNAGtext()
     
     //println pgnNotation.getMoveNumber() + " _ " + pgnNotation.getMove() + " _ " + pgnNotation.getComment()
     //println "      " + odds + " _ " + freq + " _ " + opening
@@ -307,11 +307,13 @@ while (pgn.length() > 0) {
     /* Process pgnNotation : nag */
     if (nag != "") {
         currentNode["NAG"] = nag
-        def nagTxt = NotationTranslator.getNAG((nag-"\$").toInteger(), "sym")
-        if (currentNode.details) {
-            currentNode.setDetailsText("${currentNode.details.to.plain}\n${nagTxt}")
-        } else {
-            currentNode.setDetailsText(nagTxt)
+        pgnNotation.getNAGs().each {
+            def nagTxt = NotationTranslator.getNAG((it-"\$").toInteger(), "sym")
+            if (currentNode.details) {
+                currentNode.setDetailsText("${currentNode.details.to.plain}\n${nagTxt}")
+            } else {
+                currentNode.setDetailsText(nagTxt)
+            }
         }
     }   
     /* Process pgnNotation : opening */
@@ -320,6 +322,8 @@ while (pgn.length() > 0) {
         commentsNode.style.setName("Explanation")
         commentsNode.setFree(true)
         commentsNode.setDetailsText(comments)
+        commentsNode.setHorizontalShift(70)
+        commentsNode.setVerticalShift(10)
     }
    
     /* Advance pgnNotation processing */
