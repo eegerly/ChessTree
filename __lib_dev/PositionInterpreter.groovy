@@ -100,7 +100,14 @@ def class PositionInterpreter {
         
         FEN =  this.board2FEN() + " " + color + " " + castleTarget + " " + enPasssantTarget + " " + halfMoveClock + " " + moveNumber
     }
-    
+    def searchPiece(piece) {
+        def positions = []
+        this.board.eachWithIndex{ row, rowIdx ->
+            "abcdefgh"[row.findIndexValues{it == piece}].each{positions+= (it+(8-rowIdx))}
+        }
+        return positions
+
+    }    
     private doCastling(type) {
         def isNextWhite = (this.color == "w")
         def isKingSide = type.toLowerCase()=="k"
