@@ -43,7 +43,7 @@ chessTreeSettings = new ChessTreeSettings(this.node.map)
 SUPPORTED_LANGUAGES = chessTreeSettings.SUPPORTED_LANGUAGES
 DICTIONARY = chessTreeSettings.DICTIONARY
 
-LANGUAGE_CURRENT = chessTreeSettings.get("chesstree_language")
+LANGUAGE_CURRENT = chessTreeSettings.get("chesstree_language").toString()
 
 ROOT = this.node.map.root
 
@@ -166,7 +166,6 @@ if (vars.dialogResult == 'paste') {
 def translationNeeded = (PGN_LANGUAGE != LANGUAGE_CURRENT)
 def nextNodeStack = []
 def nextNodeStackAlt = []
-
 def pgnNotation = new Notation(pgn, PGN_LANGUAGE)
 def nodeNotation = new Notation(this.node.getDisplayedText(), LANGUAGE_CURRENT) // FEN is retrieved from PGN notation, not needed for nodeNotation
 
@@ -226,7 +225,7 @@ while (pgn.length() > 0) {
     
     //println pgnNotation.getMoveNumber() + " _ " + pgnNotation.getMove() + " _ " + pgnNotation.getComment()
     //println "      " + odds + " _ " + freq + " _ " + opening
-    println "********************"
+    println "*********************"
     println pgnNotation.getNumbering() + " " + pgnNotation.getMove()
 
     //println pgnNotation.getRemainingText()
@@ -235,6 +234,7 @@ while (pgn.length() > 0) {
     /* Handle translated notation within chesstree */
     if (translationNeeded) {
         pgnNotation.translateTo(LANGUAGE_CURRENT)
+        pgnNotation.setLanguage(PGN_LANGUAGE) // language is needed to set back as remainingText is not translated.
     }
     
     /* Process branching */
@@ -267,7 +267,7 @@ while (pgn.length() > 0) {
         }
         
     }
-    
+
     /* Process pgnNotation : node text */
     if (matchingChild == null) {
         // no mathing child found, create it

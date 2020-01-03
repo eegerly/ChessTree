@@ -5,80 +5,100 @@ import ChessTree.Notation
 
 
 abstract class AbstractPiece {
-    def possibleTargets = []
+    def allTargets = []
+    def possibleMoves = []
+    def possibleCaptures = []
+    def attacksKing = false
     def position
     def color
     public AbstractPiece(color, position) {
         this.color = color
         this.position = position
-        this.possibleTargets = getPossibleMovesFromSource()
-        
-        
+        position[0] = [0,[position[0],7].min()].max()
+        position[1] = [0,[position[1],7].min()].max()
+        this.allTargets = getAllTargets()
     }
-    abstract getPossibleMovesFromSource()
-    //abstract restrictPossibleTargets() // todo: implement for each piece class
+    public getPositionCoordinate() {return "abcdefgh"[position[0]]+"12345678"[position[1]]}
+    public getAllTargetCoordinates() {return allTargets.collect{"abcdefgh"[it[0]]+"12345678"[it[1]]}}
+    
+    abstract getAllTargets()
+    abstract calculatePossibleMoves(position) // todo: implement for each piece class
 }
 
 class Rook extends AbstractPiece {
-    def getName() {println "Rook"}
+    def getName() {return "Rook"}
     public Rook(color, position) {
         super(color, position)
     }
     
     def getPossibleMovesFrom(square) {
         def possibleMoves = []
-        ("abcdefgh"-square[0]).each{possibleMoves += (it + square[1])}
-        ("12345678"-square[1]).each{possibleMoves += (square[0] + it)}
+        ((0..7)-square[0]).each{possibleMoves += [[it, square[1]]]}
+        ((0..7)-square[1]).each{possibleMoves += [[square[0], it]]}
+        
         return possibleMoves
     }
-    def getPossibleMovesFromSource() {
+    def getAllTargets() {
         return getPossibleMovesFrom(this.position)
     }    
+    def calculatePossibleMoves(position) {
+        // can move to empty square
+        // can capture any enemy piece 
+        // can move only where check is ceased
+        // blocked on line/row/totally if King would become checked
+    }
 }
 
 class Bishop extends AbstractPiece {
     public Bishop(color, position) {
         super(color, position)
     }
-    def getName() {println "Bishop"}
+    def getName() {return "Bishop"}
     def getPossibleMovesFrom(square) {
         def possibleMoves = []
-        def x="abcdefgh".indexOf(square[0])+1
-        def y="12345678".indexOf(square[1])+1
+
+        def x=square[0]
+        def y=square[1]
         
-        def x1 = "abcdefgh".drop(x).take(8-[x,y].max())
-        def y1 = "12345678".drop(y).take(8-[x,y].max())
-        
-        def x2 = "abcdefgh".drop(x).take(8-[x,9-y].max())
-        def y2 = "87654321".drop(9-y).take(8-[x,9-y].max())
-        
-        def x3 = "hgfedcba".drop(9-x).take(8-[9-x,y].max())
-        def y3 = "12345678".drop(y).take(8-[9-x,y].max())
-        
-        def x4 = "hgfedcba".drop(9-x).take(8-[9-x,9-y].max())
-        def y4 = "87654321".drop(9-y).take(8-[9-x,9-y].max())
-        
-        
-        possibleMoves = (x1+x2+x3+x4).toList().withIndex().collect({it, idx -> it+(y1+y2+y3+y4)[idx]})   
+        def x1 = (0..7).drop(x+1).take(7-[x,y].max())
+        def y1 = (0..7).drop(y+1).take(7-[x,y].max())
+
+        def x2 = (0..7).drop(x+1).take(7-[x,7-y].max())
+        def y2 = (7..0).drop(8-y).take(7-[x,7-y].max())
+
+        def x3 = (7..0).drop(8-x).take(7-[7-x,y].max())
+        def y3 = (0..7).drop(y+1).take(7-[7-x,y].max())
+
+        def x4 = (7..0).drop(8-x).take(7-[7-x,7-y].max())
+        def y4 = (7..0).drop(8-y).take(7-[7-x,7-y].max())
+
+
+        possibleMoves = (x1+x2+x3+x4).toList().withIndex().collect({it, idx -> [it,(y1+y2+y3+y4)[idx]]})   
         return possibleMoves
     } 
     
     
-    def getPossibleMovesFromSource() {
+    def getAllTargets() {
         return getPossibleMovesFrom(this.position)
     }    
+    def calculatePossibleMoves(position) {
+        // can move to empty square
+        // can capture any enemy piece 
+        // can move only where check is ceased
+        // blocked on diagonal if King would become checked
+    }
 }
 
 class Knight extends AbstractPiece {
     public Knight(color, position) {
         super(color, position)
     }
-    def getName() {println "Knight"}
+    def getName() {return "Knight"}
     
     def getPossibleMovesFrom(square) {
         def possibleMoves = []
-        def x="abcdefgh".indexOf(square[0])
-        def y="12345678".indexOf(square[1])        
+        def x=square[0]
+        def y=square[1]
         
         possibleMoves = [
             [x-2, y-1],
@@ -89,60 +109,73 @@ class Knight extends AbstractPiece {
             [x+2, y-1],
             [x+1, y-2],
             [x-1, y-2]
-            ].findAll({it[0]>0&&it[0]<8&&it[1]>0&&it[1]<8}).collect({"abcdefgh"[it[0]]+"12345678"[it[1]]})
+            ].findAll({it[0]>=0&&it[0]<8&&it[1]>=0&&it[1]<8})
 
         return possibleMoves
     }
-    def getPossibleMovesFromSource() {
+    def getAllTargets() {
         return getPossibleMovesFrom(this.position)
     }    
+    def calculatePossibleMoves(position) {
+        // can move to empty square
+        // can capture any enemy piece 
+        // can move only where check is ceased
+        // no possible move if King would become checked
+    }
 }
 
 class Queen extends AbstractPiece {
-    def getName() {println "Queen"}
+    def getName() {return "Queen"}
     public Queen(color, position) {
         super(color, position)
     }
     
     def getPossibleMovesFrom(square) {
         def possibleMoves = []
-        def x="abcdefgh".indexOf(square[0])+1
-        def y="12345678".indexOf(square[1])+1
+        def x=square[0]
+        def y=square[1]
         
-        def x1 = "abcdefgh".drop(x).take(8-[x,y].max())
-        def y1 = "12345678".drop(y).take(8-[x,y].max())
-        
-        def x2 = "abcdefgh".drop(x).take(8-[x,9-y].max())
-        def y2 = "87654321".drop(9-y).take(8-[x,9-y].max())
-        
-        def x3 = "hgfedcba".drop(9-x).take(8-[9-x,y].max())
-        def y3 = "12345678".drop(y).take(8-[9-x,y].max())
-        
-        def x4 = "hgfedcba".drop(9-x).take(8-[9-x,9-y].max())
-        def y4 = "87654321".drop(9-y).take(8-[9-x,9-y].max())
-        
-        
-        possibleMoves = (x1+x2+x3+x4).toList().withIndex().collect({it, idx -> it+(y1+y2+y3+y4)[idx]})   
-        ("abcdefgh"-square[0]).each{possibleMoves += (it + square[1])}
-        ("12345678"-square[1]).each{possibleMoves += (square[0] + it)}
+        def x1 = (0..7).drop(x+1).take(7-[x,y].max())
+        def y1 = (0..7).drop(y+1).take(7-[x,y].max())
+
+        def x2 = (0..7).drop(x+1).take(7-[x,7-y].max())
+        def y2 = (7..0).drop(8-y).take(7-[x,7-y].max())
+
+        def x3 = (7..0).drop(8-x).take(7-[7-x,y].max())
+        def y3 = (0..7).drop(y+1).take(7-[7-x,y].max())
+
+        def x4 = (7..0).drop(8-x).take(7-[7-x,7-y].max())
+        def y4 = (7..0).drop(8-y).take(7-[7-x,7-y].max())
+
+
+        possibleMoves = (x1+x2+x3+x4).toList().withIndex().collect({it, idx -> [it,(y1+y2+y3+y4)[idx]]})   
+
+        ((0..7)-square[0]).each{possibleMoves += [[it, square[1]]]}
+        ((0..7)-square[1]).each{possibleMoves += [[square[0], it]]}
                         
         return possibleMoves
     }
-    def getPossibleMovesFromSource() {
+    def getAllTargets() {
         return getPossibleMovesFrom(this.position)
     }    
+    def calculatePossibleMoves(position) {
+        // can move to empty square
+        // can capture any enemy piece 
+        // can move only where check is ceased
+        // blocked on position/diagonal/line/row if King would become checked
+    }
 }
 
 class King extends AbstractPiece {
-    def getName() {println "King"}
+    def getName() {return "King"}
     public King(color, position) {
         super(color, position)
     }
     
     def getPossibleMovesFrom(square) {
         def possibleMoves = []
-        def x="abcdefgh".indexOf(square[0])
-        def y="12345678".indexOf(square[1])        
+        def x=square[0]
+        def y=square[1]
         
         possibleMoves = [
             [x-1, y-1],
@@ -153,57 +186,62 @@ class King extends AbstractPiece {
             [x+1, y-1],
             [x+1, y],
             [x+1, y+1]
-            ].findAll({it[0]>0&&it[0]<8&&it[1]>0&&it[1]<8}).collect({"abcdefgh"[it[0]]+"12345678"[it[1]]})
+            ].findAll({it[0]>=0&&it[0]<8&&it[1]>=0&&it[1]<8})
 
         return possibleMoves
     }
-    def getPossibleMovesFromSource() {
+    def getAllTargets() {
         return getPossibleMovesFrom(this.position)
     }    
+    def calculatePossibleMoves(position) {
+        // can move to empty square
+        // can move and capture enemy piece
+        // can move only to not attacked squares 
+        // cannot move to any of allTargets of enemy king
+    }
 }
 
 class Pawn extends AbstractPiece {
-    def getName() {println "Pawn"}
+    def getName() {return "Pawn"}
     public Pawn(color, position) {
+        position[0] = [1,[position[0],6].min()].max()
+        position[1] = [1,[position[1],6].min()].max()
         super(color, position)
     }
     
-    def getPossibleMoves(square, isForward) {
+    def getPossibleMoves(square) {
         def possibleMoves = []
-        def x="abcdefgh".indexOf(square[0])
-        def y="12345678".indexOf(square[1])        
-        def isPositiveDirection = (color=="w" && isForward) || (color=="b" && (!isForward))
+        def x=square[0]
+        def y=square[1]
+        def isPositiveDirection = (color=="w")
         possibleMoves = [
             [x-1, y+((isPositiveDirection) ? 1 : -1)],
-            [x-1, y+((isPositiveDirection) ? 1 : -1)],
-            [x-1, y+((isPositiveDirection) ? 1 : -1)],
-            ].findAll({it[0]>0&&it[0]<8&&it[1]>0&&it[1]<8}).collect({"abcdefgh"[it[0]]+"12345678"[it[1]]})
+            [x,   y+((isPositiveDirection) ? 1 : -1)],
+            [x+1, y+((isPositiveDirection) ? 1 : -1)],
+            ]
         
-        // add pawn double move, (enPassantTargetSquare)
+        /* add pawn double move */
         switch (y) {
-            case 1: if (isForward  && color=="w")  possibleMoves += [x, 3]; break;
-            case 3: if (!isForward  && color=="w") possibleMoves += [x, 1]; break;
-            case 4: if (!isForward  && color=="b") possibleMoves += [x, 6]; break;
-            case 6: if (isForward  && color=="b")  possibleMoves += [x, 4]; break;
+            case 1: if (isPositiveDirection)  possibleMoves += [[x, 3]]; break;
+            case 6: if (!isPositiveDirection)  possibleMoves += [[x, 4]]; break;
         }
-        
-        
-        possibleMoves = possibleMoves.findAll({it[0]>0&&it[0]<8&&it[1]>0&&it[1]<8}).collect({"abcdefgh"[it[0]]+"12345678"[it[1]]})
-        
+        possibleMoves = possibleMoves.findAll({(it[0]>=0)&&(it[0]<8)&&(it[1]>=0)&&(it[1]<8)})
         
         return possibleMoves
     }
     def getPossibleMovesFrom(square) {
-        getPossibleMoves(square, true)
-    }
-    def getPossibleMovesTo(square) {
-        getPossibleMoves(square, false)
+        getPossibleMoves(square)
     }
     
-    
-    def getPossibleMovesFromSource() {
+    def getAllTargets() {
         return getPossibleMovesFrom(this.position)
     }    
+    def calculatePossibleMoves(position) {
+        // can move to empty square 
+        // can capture on enPassantTarget
+        // can move only where check is ceased
+        // cannot move if king would be checked
+    }
 }
 
 

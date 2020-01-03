@@ -1,9 +1,9 @@
 <map version="freeplane 1.7.0">
 <!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
-<node TEXT="ChessTree" FOLDED="false" ID="ID_1869326925" CREATED="1521562113754" MODIFIED="1549009837144" LINK="http://noUpdateURL.com" BACKGROUND_COLOR="#97c7dc" STYLE="oval">
+<node TEXT="ChessTree" FOLDED="false" ID="ID_1869326925" CREATED="1521562113754" MODIFIED="1578047737575" LINK="http://noUpdateURL.com" BACKGROUND_COLOR="#97c7dc" STYLE="oval">
 <font SIZE="16" BOLD="true" ITALIC="true"/>
 <hook NAME="MapStyle">
-    <properties fit_to_viewport="false" show_icon_for_attributes="true" show_note_icons="true" edgeColorConfiguration="#808080ff,#ff0000ff,#0000ffff,#00ff00ff,#ff00ffff,#00ffffff,#7c0000ff,#00007cff,#007c00ff,#7c007cff,#007c7cff,#7c7c00ff"/>
+    <properties show_icon_for_attributes="true" fit_to_viewport="false" show_note_icons="true" edgeColorConfiguration="#808080ff,#ff0000ff,#0000ffff,#00ff00ff,#ff00ffff,#00ffffff,#7c0000ff,#00007cff,#007c00ff,#7c007cff,#007c7cff,#7c7c00ff"/>
 
 <map_styles>
 <stylenode LOCALIZED_TEXT="styles.root_node" STYLE="oval" UNIFORM_SHAPE="true" VGAP_QUANTITY="24.0 pt">
@@ -106,8 +106,9 @@
     </ul>
   </body>
 </html>
+
 </richcontent>
-<node TEXT="description" POSITION="left" ID="ID_752418840" CREATED="1521562135104" MODIFIED="1540216035317">
+<node TEXT="description" POSITION="left" ID="ID_752418840" CREATED="1521562135104" MODIFIED="1578047737581">
 <edge COLOR="#ff0000"/>
 <richcontent TYPE="NOTE">
 
@@ -127,6 +128,7 @@
     </p>
   </body>
 </html>
+
 </richcontent>
 <node ID="ID_281132702" CREATED="1521563587956" MODIFIED="1521563734014"><richcontent TYPE="NODE">
 
@@ -153,7 +155,7 @@
 <attribute_layout VALUE_WIDTH="134.9999959766866 pt"/>
 </node>
 </node>
-<node TEXT="changes" POSITION="left" ID="ID_845634758" CREATED="1521562135109" MODIFIED="1540216035330">
+<node TEXT="changes" POSITION="left" ID="ID_845634758" CREATED="1521562135109" MODIFIED="1578047737583">
 <edge COLOR="#0000ff"/>
 <richcontent TYPE="NOTE">
 
@@ -167,9 +169,10 @@
     </p>
   </body>
 </html>
+
 </richcontent>
 </node>
-<node TEXT="license" FOLDED="true" POSITION="left" ID="ID_1331637895" CREATED="1521562135113" MODIFIED="1540216035338">
+<node TEXT="license" FOLDED="true" POSITION="left" ID="ID_1331637895" CREATED="1521562135113" MODIFIED="1578047737584">
 <edge COLOR="#00ff00"/>
 <richcontent TYPE="NOTE">
 
@@ -189,10 +192,11 @@
     </p>
   </body>
 </html>
+
 </richcontent>
 <node TEXT="&#xa;This add-on is free software: you can redistribute it and/or modify&#xa;it under the terms of the GNU General Public License as published by&#xa;the Free Software Foundation, either version 2 of the License, or&#xa;(at your option) any later version.&#xa;&#xa;This program is distributed in the hope that it will be useful,&#xa;but WITHOUT ANY WARRANTY; without even the implied warranty of&#xa;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the&#xa;GNU General Public License for more details.&#xa;" ID="ID_1555852289" CREATED="1521562135117" MODIFIED="1521566722845"/>
 </node>
-<node TEXT="preferences.xml" POSITION="left" ID="ID_136508631" CREATED="1521562135121" MODIFIED="1540216035346">
+<node TEXT="preferences.xml" POSITION="left" ID="ID_136508631" CREATED="1521562135121" MODIFIED="1578047737588">
 <edge COLOR="#ff00ff"/>
 <richcontent TYPE="NOTE">
 
@@ -209,9 +213,10 @@
     </p>
   </body>
 </html>
+
 </richcontent>
 </node>
-<node TEXT="default.properties" POSITION="left" ID="ID_1494843788" CREATED="1521562135125" MODIFIED="1540216035353">
+<node TEXT="default.properties" POSITION="left" ID="ID_1494843788" CREATED="1521562135125" MODIFIED="1578047737590">
 <edge COLOR="#00ffff"/>
 <richcontent TYPE="NOTE">
 
@@ -221,13 +226,22 @@
   </head>
   <body>
     <p>
-      These properties play together with the preferences: Each property defined in the preferences should have a default value in the attributes of this node.
+      These properties are used for:
     </p>
+    <ul>
+      <li>
+        Each property defined in the preferences should have a default value in the attributes of this node.
+      </li>
+      <li>
+        For each menu item with an icon add an attribute with the icon key (use developer tool menuItemInfo) as key and the icon path as value. Example: '${name}.icon': '/images/${name}-icon.png'
+      </li>
+    </ul>
   </body>
 </html>
+
 </richcontent>
 </node>
-<node TEXT="translations" POSITION="left" ID="ID_461099033" CREATED="1521562135130" MODIFIED="1540216035360">
+<node TEXT="translations" POSITION="left" ID="ID_461099033" CREATED="1521562135130" MODIFIED="1578047737592">
 <edge COLOR="#7c0000"/>
 <richcontent TYPE="NOTE">
 
@@ -252,15 +266,18 @@
     </ul>
   </body>
 </html>
+
 </richcontent>
-<node TEXT="en" ID="ID_1779268052" CREATED="1521562135133" MODIFIED="1540215919911" MAX_WIDTH="322.49999056756525 pt" MIN_WIDTH="322.49999056756525 pt">
+<attribute_layout VALUE_WIDTH="250.0 pt"/>
+<node TEXT="en" ID="ID_1779268052" CREATED="1521562135133" MODIFIED="1578047918460" MAX_WIDTH="322.49999056756525 pt" MIN_WIDTH="322.49999056756525 pt">
 <attribute_layout NAME_WIDTH="155.99999535083785 pt" VALUE_WIDTH="123.74999631196272 pt"/>
 <attribute NAME="addons.${name}" VALUE="ChessTree"/>
-<attribute NAME="addon.${name}.updateChessTree" VALUE="Update ChessTree..."/>
-<attribute NAME="addon.${name}.pasteBranch" VALUE="Paste branch..."/>
+<attribute NAME="addons.${name}.updateChessTree" VALUE="Update ChessTree..."/>
+<attribute NAME="addons.${name}.pasteBranch" VALUE="Paste branch..."/>
+<attribute NAME="addons.${name}.copyPGN" VALUE="Copy PGN..."/>
 </node>
 </node>
-<node TEXT="deinstall" POSITION="left" ID="ID_1510539068" CREATED="1521562135137" MODIFIED="1540216035366">
+<node TEXT="deinstall" POSITION="left" ID="ID_1510539068" CREATED="1521562135137" MODIFIED="1578047741493">
 <edge COLOR="#00007c"/>
 <richcontent TYPE="NOTE">
 
@@ -274,6 +291,7 @@
     </p>
   </body>
 </html>
+
 </richcontent>
 <attribute_layout NAME_WIDTH="52.499998435378124 pt" VALUE_WIDTH="271.4999919086697 pt"/>
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}.script.xml"/>
@@ -281,8 +299,9 @@
 <attribute NAME="delete" VALUE="${installationbase}/lib/ChessTree.jar"/>
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/pasteBranch.groovy"/>
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/updateChessTree.groovy"/>
+<attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/copyPGN.groovy"/>
 </node>
-<node TEXT="scripts" POSITION="right" ID="ID_836008002" CREATED="1521562135167" MODIFIED="1540216035376">
+<node TEXT="scripts" POSITION="right" ID="ID_836008002" CREATED="1521562135167" MODIFIED="1578047737599">
 <edge COLOR="#007c00"/>
 <richcontent TYPE="NOTE">
 
@@ -292,7 +311,7 @@
   </head>
   <body>
     <p>
-      An add-on may contain multiple scripts. The node text defines the script name (e.g. inserInlineImage.groovy). The name must have a suffix of a supported script language like .groovy or .js and may only consist of letters and digits. The script properties have to be configured via attributes:
+      An add-on may contain multiple scripts. The node text defines the script name (e.g. insertInlineImage.groovy). The name must have a suffix of a supported script language like .groovy or .js and may only consist of letters and digits. The script properties have to be configured via attributes:
     </p>
     <p>
       
@@ -301,13 +320,10 @@
       * menuLocation: &lt;locationkey&gt;
     </p>
     <p>
-      &#160;&#160;&#160;- Defines where the menu location.
+      &#160;&#160;&#160;- Defines the menu location, defaults a sub menu 'main_menu_scripting/addons.${name}'.
     </p>
     <p>
-      &#160;&#160;&#160;-&#160;See mindmapmodemenu.xml for how the menu locations look like.
-    </p>
-    <p>
-      &#160;&#160;&#160;- http://freeplane.bzr.sf.net/bzr/freeplane/freeplane_program/trunk/annotate/head%3A/freeplane/resources/xml/mindmapmodemenu.xml
+      &#160;&#160;&#160;-&#160;Use developer tool menuItemInfo to inspect menu location keys.
     </p>
     <p>
       &#160;&#160;&#160;- This attribute is mandatory
@@ -404,10 +420,11 @@
     </p>
   </body>
 </html>
+
 </richcontent>
-<node TEXT="pasteBranch.groovy" ID="ID_1708118480" CREATED="1522494712280" MODIFIED="1522494830917">
+<node TEXT="pasteBranch.groovy" ID="ID_1708118480" CREATED="1522494712280" MODIFIED="1578047836752">
 <attribute_layout NAME_WIDTH="146.2499956414105 pt" VALUE_WIDTH="134.9999959766866 pt"/>
-<attribute NAME="menuTitleKey" VALUE="addon.${name}.pasteBranch"/>
+<attribute NAME="menuTitleKey" VALUE="addons.${name}.pasteBranch"/>
 <attribute NAME="menuLocation" VALUE="/menu_bar/addons.${name}"/>
 <attribute NAME="executionMode" VALUE="on_single_node"/>
 <attribute NAME="keyboardShortcut" VALUE=""/>
@@ -417,9 +434,21 @@
 <attribute NAME="execute_scripts_without_exec_restriction" VALUE="true"/>
 <attribute NAME="execute_scripts_without_network_restriction" VALUE="true"/>
 </node>
-<node TEXT="updateChessTree.groovy" ID="ID_728751355" CREATED="1538315999856" MODIFIED="1540215984948">
+<node TEXT="updateChessTree.groovy" ID="ID_728751355" CREATED="1538315999856" MODIFIED="1578047832451">
 <attribute_layout VALUE_WIDTH="134.9999959766866 pt"/>
-<attribute NAME="menuTitleKey" VALUE="addon.${name}.updateChessTree"/>
+<attribute NAME="menuTitleKey" VALUE="addons.${name}.updateChessTree"/>
+<attribute NAME="menuLocation" VALUE="/menu_bar/addons.${name}"/>
+<attribute NAME="executionMode" VALUE="on_single_node"/>
+<attribute NAME="keyboardShortcut" VALUE=""/>
+<attribute NAME="execute_scripts_without_asking" VALUE="true"/>
+<attribute NAME="execute_scripts_without_file_restriction" VALUE="true"/>
+<attribute NAME="execute_scripts_without_write_restriction" VALUE="true"/>
+<attribute NAME="execute_scripts_without_exec_restriction" VALUE="true"/>
+<attribute NAME="execute_scripts_without_network_restriction" VALUE="true"/>
+</node>
+<node TEXT="copyPGN.groovy" ID="ID_520278260" CREATED="1578047737614" MODIFIED="1578047866316">
+<attribute_layout VALUE_WIDTH="250.0 pt"/>
+<attribute NAME="menuTitleKey" VALUE="addons.${name}.copyPGN"/>
 <attribute NAME="menuLocation" VALUE="/menu_bar/addons.${name}"/>
 <attribute NAME="executionMode" VALUE="on_single_node"/>
 <attribute NAME="keyboardShortcut" VALUE=""/>
@@ -430,7 +459,7 @@
 <attribute NAME="execute_scripts_without_network_restriction" VALUE="true"/>
 </node>
 </node>
-<node TEXT="lib" POSITION="right" ID="ID_328124690" CREATED="1521562135185" MODIFIED="1540216035574">
+<node TEXT="lib" POSITION="right" ID="ID_328124690" CREATED="1521562135185" MODIFIED="1578047737663">
 <edge COLOR="#7c007c"/>
 <richcontent TYPE="NOTE">
 
@@ -468,9 +497,10 @@
     </p>
   </body>
 </html>
+
 </richcontent>
 </node>
-<node TEXT="zips" POSITION="right" ID="ID_188436602" CREATED="1521562135191" MODIFIED="1540216035581">
+<node TEXT="zips" POSITION="right" ID="ID_188436602" CREATED="1521562135191" MODIFIED="1578047737666">
 <edge COLOR="#007c7c"/>
 <richcontent TYPE="NOTE">
 
@@ -508,11 +538,12 @@
     </p>
   </body>
 </html>
+
 </richcontent>
 <node TEXT="templates" ID="ID_1849114914" CREATED="1521565216661" MODIFIED="1521565216662"/>
 <node TEXT="lib" ID="ID_1750925238" CREATED="1522351097503" MODIFIED="1522351097505"/>
 </node>
-<node TEXT="images" POSITION="right" ID="ID_209340361" CREATED="1521562135195" MODIFIED="1540216035600">
+<node TEXT="images" POSITION="right" ID="ID_209340361" CREATED="1521562135195" MODIFIED="1578047737675">
 <edge COLOR="#7c7c00"/>
 <richcontent TYPE="NOTE">
 
@@ -546,6 +577,7 @@
     </p>
   </body>
 </html>
+
 </richcontent>
 </node>
 </node>
