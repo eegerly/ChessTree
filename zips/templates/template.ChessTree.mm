@@ -149,6 +149,22 @@ else {&#xd;
 <font SIZE="10" BOLD="true"/>
 <edge STYLE="bezier" WIDTH="1"/>
 </stylenode>
+<stylenode TEXT="Script" BACKGROUND_COLOR="#ff99ff" BACKGROUND_ALPHA="82"/>
+<stylenode TEXT="Diff.Added" COLOR="#ffffff" BACKGROUND_COLOR="#00c800" STYLE="oval" SHAPE_HORIZONTAL_MARGIN="0.0 pt" SHAPE_VERTICAL_MARGIN="0.0 pt" TEXT_ALIGN="CENTER" MAX_WIDTH="100.0 px" MIN_WIDTH="25.0 px" BORDER_WIDTH="2.0 px" BORDER_COLOR_LIKE_EDGE="false" BORDER_COLOR="#00c800" VGAP_QUANTITY="2.0 pt">
+<icon BUILTIN="very_positive"/>
+<font SIZE="8" BOLD="false"/>
+<edge STYLE="hide_edge" COLOR="#ffffff" WIDTH="thin"/>
+</stylenode>
+<stylenode TEXT="Diff.Removed" COLOR="#ffffff" BACKGROUND_COLOR="#c80000" STYLE="oval" SHAPE_HORIZONTAL_MARGIN="0.0 pt" SHAPE_VERTICAL_MARGIN="0.0 pt" TEXT_ALIGN="CENTER" MAX_WIDTH="100.0 px" MIN_WIDTH="25.0 px" BORDER_WIDTH="2.0 px" BORDER_COLOR_LIKE_EDGE="false" BORDER_COLOR="#c80000" VGAP_QUANTITY="2.0 pt">
+<icon BUILTIN="very_negative"/>
+<edge STYLE="hide_edge" COLOR="#ffffff" WIDTH="thin"/>
+<font SIZE="8" BOLD="false"/>
+</stylenode>
+<stylenode TEXT="Diff.Priority" COLOR="#ffffff" BACKGROUND_COLOR="#0000c8" STYLE="oval" SHAPE_HORIZONTAL_MARGIN="0.0 pt" SHAPE_VERTICAL_MARGIN="0.0 pt" TEXT_ALIGN="CENTER" MAX_WIDTH="100.0 px" MIN_WIDTH="25.0 px" BORDER_WIDTH="2.0 px" BORDER_COLOR_LIKE_EDGE="false" BORDER_COLOR="#0000c8" VGAP_QUANTITY="2.0 pt">
+<icon BUILTIN="mindmap"/>
+<font SIZE="8" BOLD="false"/>
+<edge STYLE="hide_edge" COLOR="#ffffff" WIDTH="thin"/>
+</stylenode>
 </stylenode>
 <stylenode LOCALIZED_TEXT="styles.AutomaticLayout" POSITION="right" STYLE="bubble">
 <stylenode LOCALIZED_TEXT="AutomaticLayout.level.root" COLOR="#000000" STYLE="wide_hexagon" TEXT_ALIGN="CENTER" VGAP_QUANTITY="5.0 pt" MIN_WIDTH="50.0 px" BORDER_WIDTH="3.0 px" BORDER_COLOR_LIKE_EDGE="false" BORDER_COLOR="#000000" BORDER_DASH="SOLID">

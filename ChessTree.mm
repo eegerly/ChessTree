@@ -1,6 +1,6 @@
 <map version="freeplane 1.7.0">
 <!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
-<node TEXT="ChessTree" FOLDED="false" ID="ID_1869326925" CREATED="1521562113754" MODIFIED="1578047737575" LINK="http://noUpdateURL.com" BACKGROUND_COLOR="#97c7dc" STYLE="oval">
+<node TEXT="ChessTree" FOLDED="false" ID="ID_1869326925" CREATED="1521562113754" MODIFIED="1578240952920" LINK="http://noUpdateURL.com" BACKGROUND_COLOR="#97c7dc" STYLE="oval">
 <font SIZE="16" BOLD="true" ITALIC="true"/>
 <hook NAME="MapStyle">
     <properties show_icon_for_attributes="true" fit_to_viewport="false" show_note_icons="true" edgeColorConfiguration="#808080ff,#ff0000ff,#0000ffff,#00ff00ff,#ff00ffff,#00ffffff,#7c0000ff,#00007cff,#007c00ff,#7c007cff,#007c7cff,#7c7c00ff"/>
@@ -108,7 +108,7 @@
 </html>
 
 </richcontent>
-<node TEXT="description" POSITION="left" ID="ID_752418840" CREATED="1521562135104" MODIFIED="1578047737581">
+<node TEXT="description" POSITION="left" ID="ID_752418840" CREATED="1521562135104" MODIFIED="1578240952922">
 <edge COLOR="#ff0000"/>
 <richcontent TYPE="NOTE">
 
@@ -155,7 +155,7 @@
 <attribute_layout VALUE_WIDTH="134.9999959766866 pt"/>
 </node>
 </node>
-<node TEXT="changes" POSITION="left" ID="ID_845634758" CREATED="1521562135109" MODIFIED="1578047737583">
+<node TEXT="changes" POSITION="left" ID="ID_845634758" CREATED="1521562135109" MODIFIED="1578240952924">
 <edge COLOR="#0000ff"/>
 <richcontent TYPE="NOTE">
 
@@ -172,7 +172,7 @@
 
 </richcontent>
 </node>
-<node TEXT="license" FOLDED="true" POSITION="left" ID="ID_1331637895" CREATED="1521562135113" MODIFIED="1578047737584">
+<node TEXT="license" FOLDED="true" POSITION="left" ID="ID_1331637895" CREATED="1521562135113" MODIFIED="1578240952927">
 <edge COLOR="#00ff00"/>
 <richcontent TYPE="NOTE">
 
@@ -196,7 +196,7 @@
 </richcontent>
 <node TEXT="&#xa;This add-on is free software: you can redistribute it and/or modify&#xa;it under the terms of the GNU General Public License as published by&#xa;the Free Software Foundation, either version 2 of the License, or&#xa;(at your option) any later version.&#xa;&#xa;This program is distributed in the hope that it will be useful,&#xa;but WITHOUT ANY WARRANTY; without even the implied warranty of&#xa;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the&#xa;GNU General Public License for more details.&#xa;" ID="ID_1555852289" CREATED="1521562135117" MODIFIED="1521566722845"/>
 </node>
-<node TEXT="preferences.xml" POSITION="left" ID="ID_136508631" CREATED="1521562135121" MODIFIED="1578047737588">
+<node TEXT="preferences.xml" POSITION="left" ID="ID_136508631" CREATED="1521562135121" MODIFIED="1578240952928">
 <edge COLOR="#ff00ff"/>
 <richcontent TYPE="NOTE">
 
@@ -216,7 +216,7 @@
 
 </richcontent>
 </node>
-<node TEXT="default.properties" POSITION="left" ID="ID_1494843788" CREATED="1521562135125" MODIFIED="1578047737590">
+<node TEXT="default.properties" POSITION="left" ID="ID_1494843788" CREATED="1521562135125" MODIFIED="1578240952928">
 <edge COLOR="#00ffff"/>
 <richcontent TYPE="NOTE">
 
@@ -240,8 +240,9 @@
 </html>
 
 </richcontent>
+<attribute_layout VALUE_WIDTH="250.0 pt"/>
 </node>
-<node TEXT="translations" POSITION="left" ID="ID_461099033" CREATED="1521562135130" MODIFIED="1578047737592">
+<node TEXT="translations" POSITION="left" ID="ID_461099033" CREATED="1521562135130" MODIFIED="1578240952929">
 <edge COLOR="#7c0000"/>
 <richcontent TYPE="NOTE">
 
@@ -269,15 +270,16 @@
 
 </richcontent>
 <attribute_layout VALUE_WIDTH="250.0 pt"/>
-<node TEXT="en" ID="ID_1779268052" CREATED="1521562135133" MODIFIED="1578047918460" MAX_WIDTH="322.49999056756525 pt" MIN_WIDTH="322.49999056756525 pt">
+<node TEXT="en" ID="ID_1779268052" CREATED="1521562135133" MODIFIED="1578239400182" MAX_WIDTH="322.49999056756525 pt" MIN_WIDTH="322.49999056756525 pt">
 <attribute_layout NAME_WIDTH="155.99999535083785 pt" VALUE_WIDTH="123.74999631196272 pt"/>
 <attribute NAME="addons.${name}" VALUE="ChessTree"/>
 <attribute NAME="addons.${name}.updateChessTree" VALUE="Update ChessTree..."/>
 <attribute NAME="addons.${name}.pasteBranch" VALUE="Paste branch..."/>
 <attribute NAME="addons.${name}.copyPGN" VALUE="Copy PGN..."/>
+<attribute NAME="addons.${name}.compareTrees" VALUE="Compare trees"/>
 </node>
 </node>
-<node TEXT="deinstall" POSITION="left" ID="ID_1510539068" CREATED="1521562135137" MODIFIED="1578047741493">
+<node TEXT="deinstall" POSITION="left" ID="ID_1510539068" CREATED="1521562135137" MODIFIED="1578240952930">
 <edge COLOR="#00007c"/>
 <richcontent TYPE="NOTE">
 
@@ -300,8 +302,9 @@
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/pasteBranch.groovy"/>
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/updateChessTree.groovy"/>
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/copyPGN.groovy"/>
+<attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/compareTrees.groovy"/>
 </node>
-<node TEXT="scripts" POSITION="right" ID="ID_836008002" CREATED="1521562135167" MODIFIED="1578047737599">
+<node TEXT="scripts" POSITION="right" ID="ID_836008002" CREATED="1521562135167" MODIFIED="1578240952932">
 <edge COLOR="#007c00"/>
 <richcontent TYPE="NOTE">
 
@@ -458,8 +461,20 @@
 <attribute NAME="execute_scripts_without_exec_restriction" VALUE="true"/>
 <attribute NAME="execute_scripts_without_network_restriction" VALUE="true"/>
 </node>
+<node TEXT="compareTrees.groovy" ID="ID_627302378" CREATED="1578239373684" MODIFIED="1578239373712">
+<attribute_layout VALUE_WIDTH="250.0 pt"/>
+<attribute NAME="menuTitleKey" VALUE="addons.${name}.compareTrees"/>
+<attribute NAME="menuLocation" VALUE="main_menu_scripting/addons.${name}"/>
+<attribute NAME="executionMode" VALUE="on_single_node"/>
+<attribute NAME="keyboardShortcut" VALUE=""/>
+<attribute NAME="execute_scripts_without_asking" VALUE="true"/>
+<attribute NAME="execute_scripts_without_file_restriction" VALUE="true"/>
+<attribute NAME="execute_scripts_without_write_restriction" VALUE="false"/>
+<attribute NAME="execute_scripts_without_exec_restriction" VALUE="false"/>
+<attribute NAME="execute_scripts_without_network_restriction" VALUE="false"/>
 </node>
-<node TEXT="lib" POSITION="right" ID="ID_328124690" CREATED="1521562135185" MODIFIED="1578047737663">
+</node>
+<node TEXT="lib" POSITION="right" ID="ID_328124690" CREATED="1521562135185" MODIFIED="1578240952937">
 <edge COLOR="#7c007c"/>
 <richcontent TYPE="NOTE">
 
@@ -500,7 +515,7 @@
 
 </richcontent>
 </node>
-<node TEXT="zips" POSITION="right" ID="ID_188436602" CREATED="1521562135191" MODIFIED="1578047737666">
+<node TEXT="zips" POSITION="right" ID="ID_188436602" CREATED="1521562135191" MODIFIED="1578240952939">
 <edge COLOR="#007c7c"/>
 <richcontent TYPE="NOTE">
 
@@ -543,7 +558,7 @@
 <node TEXT="templates" ID="ID_1849114914" CREATED="1521565216661" MODIFIED="1521565216662"/>
 <node TEXT="lib" ID="ID_1750925238" CREATED="1522351097503" MODIFIED="1522351097505"/>
 </node>
-<node TEXT="images" POSITION="right" ID="ID_209340361" CREATED="1521562135195" MODIFIED="1578047737675">
+<node TEXT="images" POSITION="right" ID="ID_209340361" CREATED="1521562135195" MODIFIED="1578240952945">
 <edge COLOR="#7c7c00"/>
 <richcontent TYPE="NOTE">
 
