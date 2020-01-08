@@ -45,15 +45,16 @@ def class Notation {
     def setPiece(p)     { this.piece = p }
 
     private parseMoveText(text) {
-        def P_NUMBERING = /\d+\.\s*\.*/ //1., 1.., 1. ., 1..., 1. .., 1.... etc.
-        def P_MOVE = /[\u2654-\u265f\w\-=#\+]+/
-        def P_COMMENT = /[^}]*/
-        def P_RESULT = /(1\/2-1\/2)|(1-0)|(0-1)|\*/ //currently not used 
-        def P_ALT_END_START = /[\(\)\s]*/
-        def P_NAG = /\$\d+/
+        def P_NUMBERING = /\d+\.\s*\.*/ //1., 1.., 1. ., 1..., 1. .., 1.... etc. 
+        // " <<only for NotePad++ highlighter
+        def P_MOVE = /[\u2654-\u265f\w\-=#\+]+/ // " <<only for NotePad++ highlighter
+        def P_COMMENT = /[^}]*/ // " <<only for NotePad++ highlighter
+        def P_RESULT = /(1\/2-1\/2)|(1-0)|(0-1)|\*/ // " <<only for NotePad++ highlighter 
+        def P_ALT_END_START = /[\(\)\s]*/ // " <<only for NotePad++ highlighter
+        def P_NAG = /\$\d+/ // " <<only for NotePad++ highlighter
         // TODO one line comment with ;comment\n pattern
         /* Parse move text */
-        def finder = (text =~ /(?msu)^(($P_ALT_END_START){0,1}\s*($P_NUMBERING){0,1}\s*($P_MOVE)\s*(($P_NAG\s*)*)(\{($P_COMMENT)\}){0,1}\s*)/)
+        def finder = (text =~ /(?msu)^(($P_ALT_END_START){0,1}\s*($P_NUMBERING){0,1}\s*($P_MOVE)\s*(($P_NAG\s*)*)(\{($P_COMMENT)\}){0,1}\s*)($P_RESULT){0,1}\s*/)
         if (finder.count > 0) {
             this.notation = finder[0][1]?:""
             def numbering = finder[0][3]?:""
@@ -64,6 +65,7 @@ def class Notation {
             this.alternate = (finder[0][2]?:"")
             this.nag = (finder[0][5]?:"").split(/ +/)
             this.moveEng = NotationTranslator.getMoveEng(this)
+            this.result = finder[0][9]?:""
         } else {
             this.notation = text // if no notation found, whole text will be dropped
             this.move = ""
@@ -73,6 +75,12 @@ def class Notation {
             this.alternate = ""
             this.nag = ""
         } // if finder.count
+        
+        /* Corrections */
+        if (this.move.contains("-")) {
+            this.move = this.move.replaceAll("0", "O")
+        }
+            
         
     }
     def setWithFEN(String FEN, String text) {
@@ -170,5 +178,6 @@ def class Notation {
     def getRemainingText() { return this.remainingText }
     def getFEN()        { return this.position.FEN }
     def getNextFEN()    { return this.positionAfterMove.FEN }
-    def getLanguage()   { return language }
+    def getLanguage()   { return this.language }
+    def getResult()     { return this.result }
 }

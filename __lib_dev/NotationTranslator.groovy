@@ -169,7 +169,15 @@ def class NotationTranslator {
     
     static translateNotation(toLang, notation){
         def pieceTranslated = translatePiece(toLang, notation)
-        def moveTranslated = notation.getMove().replaceFirst(notation.getPiece(), pieceTranslated) // works also for pawn promotion e8=Q, e8Q
+        def moveTranslated = notation.getMove()
+        moveTranslated = moveTranslated.replaceFirst(notation.getPiece(), pieceTranslated) 
+        /* Translate promotion */
+        def promotion = moveTranslated.indexOf("=")+1
+        if (promotion != 0) {
+            promotion = moveTranslated[promotion]
+            promotion = NotationTranslator.DICTIONARY[notation.getColor()].find{it[notation.getLanguage()]==promotion}
+            moveTranslated = moveTranslated.replaceFirst(promotion[notation.getLanguage()], promotion[toLang])
+        }
         notation.setLanguage(toLang)
         notation.setMove(moveTranslated)
         notation.setPiece(pieceTranslated)
@@ -178,9 +186,16 @@ def class NotationTranslator {
     }
     static getMoveEng(notation){
         def pieceTranslated = translatePiece("eng", notation)
-        def moveEng = notation.getMove().replaceFirst(notation.getPiece(), pieceTranslated) // works also for pawn promotion e8=Q, e8Q
-        
-        return moveEng       
+        def moveTranslated = notation.getMove()
+        moveTranslated = moveTranslated.replaceFirst(notation.getPiece(), pieceTranslated) 
+        /* Translate promotion */
+        def promotion = moveTranslated.indexOf("=")+1
+        if (promotion != 0) {
+            promotion = moveTranslated[promotion]
+            promotion = NotationTranslator.DICTIONARY[notation.getColor()].find{it[notation.getLanguage()]==promotion}
+            moveTranslated = moveTranslated.replaceFirst(promotion[notation.getLanguage()], promotion["eng"])
+        }
+        return moveTranslated
     }
 
     static translatePiece(toLang, notation){

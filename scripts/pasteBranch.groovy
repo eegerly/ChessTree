@@ -190,7 +190,13 @@ if (currentNode == null) {
 /* Walk through PGN */
 
 while (pgn.length() > 0) {
-    if (pgnNotation.getMove() == "") break;
+    if (pgnNotation.getMove() == "") {
+        if (pgnNotation.getResult() != "") {
+            currentNode.createChild(pgnNotation.getResult())
+            currentNode.style.setName("Explanation")
+        }
+        break;
+    }
     
     /* Parse ChessTree specific comment parts: Odds, Freq, Opening */
     comments = pgnNotation.getComment()
@@ -316,7 +322,7 @@ while (pgn.length() > 0) {
             }
         }
     }   
-    /* Process pgnNotation : opening */
+    /* Process pgnNotation : comments */
     if (comments != "") {
         commentsNode = currentNode.createChild("")
         commentsNode.style.setName("Explanation")
