@@ -53,6 +53,7 @@ def class Notation {
         def P_ALT_END_START = /[\(\)\s]*/ // " <<only for NotePad++ highlighter
         def P_NAG = /\$\d+/ // " <<only for NotePad++ highlighter
         // TODO one line comment with ;comment\n pattern
+        // TODO comment and nag before move 
         /* Parse move text */
         def finder = (text =~ /(?msu)^(($P_ALT_END_START){0,1}\s*($P_NUMBERING){0,1}\s*($P_MOVE)\s*(($P_NAG\s*)*)(\{($P_COMMENT)\}){0,1}\s*)($P_RESULT){0,1}\s*/)
         if (finder.count > 0) {
