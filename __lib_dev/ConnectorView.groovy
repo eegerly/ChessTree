@@ -98,6 +98,8 @@ class ConnectorView {
                 aNode.removeConnector(it)
             }        
         }
+        
+        /* Update connector's inclination only */
         if (hasNegativeHShift && hasConnectorFromParent) {
             def vShift = aNode.getVerticalShift()
 

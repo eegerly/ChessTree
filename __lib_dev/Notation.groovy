@@ -5,6 +5,7 @@ def class Notation {
     private move = ""
     private moveEng = "" //for PositionInterpreter.doMove(), 
     private piece = ""
+    private commentBefore = ""
     private comment = ""
     private alternate = ""
     private nag = ""
@@ -55,18 +56,25 @@ def class Notation {
         // TODO one line comment with ;comment\n pattern
         // TODO comment and nag before move 
         /* Parse move text */
-        def finder = (text =~ /(?msu)^(($P_ALT_END_START){0,1}\s*($P_NUMBERING){0,1}\s*($P_MOVE)\s*(($P_NAG\s*)*)(\{($P_COMMENT)\}){0,1}\s*)($P_RESULT){0,1}\s*/)
+
+        def finder = (text =~ /(?msu)^(($P_ALT_END_START){0,1}\s*(\{($P_COMMENT)\}){0,1}\s*($P_NUMBERING){0,1}\s*($P_MOVE)\s*(($P_NAG\s*)*)(\{($P_COMMENT)\}){0,1}\s*)($P_RESULT){0,1}\s*/)
+        //finder[0].eachWithIndex{val, idx->println "${idx} : ${val} "}
         if (finder.count > 0) {
             this.notation = finder[0][1]?:""
-            def numbering = finder[0][3]?:""
-            this.move = finder[0][4]?:""
-            this.comment = finder[0][8]?:""
+            this.alternate = (finder[0][2]?:"")
+            this.commentBefore = finder[0][4]?:"" 
+            //comments with brackets: finder[0][3]
+            def numbering = finder[0][5]?:""
+            this.move = finder[0][6]?:""
+            this.nag = (finder[0][7]?:"").split(/ +/) 
+            //last nag: finder[0][8]
+            this.comment = finder[0][10]?:"" 
+            //comment with brackets: finder[0][9]
+            this.result = finder[0][11]?:""
+            //parts of result: finder[0][12..14]
             /* Extract piece */
             this.piece = ("abcdefgh0O".contains(this.move[0])) ? "" : this.move[0]
-            this.alternate = (finder[0][2]?:"")
-            this.nag = (finder[0][5]?:"").split(/ +/)
             this.moveEng = NotationTranslator.getMoveEng(this)
-            this.result = finder[0][9]?:""
         } else {
             this.notation = text // if no notation found, whole text will be dropped
             this.move = ""
@@ -106,7 +114,6 @@ def class Notation {
         parseMoveText(this.remainingText)
         
         this.remainingText = this.remainingText.drop(this.notation.length())
-        
         /* Update position, nextPosStack */
         if (hasFEN) { // Initialize position when FEN tag is received
             positionAfterMove.set(this.getTag("FEN")) // if no FEN, setter is called with ""
@@ -137,6 +144,8 @@ def class Notation {
                 copyObject(nextPosStack[0], positionAfterMove)
             }
         }
+        
+        // TODO: wrong place for advancing position, it should be relocated to the user script (possibly only pasteBranch uses it in such a way)
         if (branchingStarts() + branchingEnds() == 0) { // No branching
             advancePosition()
         }        

@@ -1,16 +1,17 @@
+
 import org.freeplane.plugin.script.proxy.ScriptUtils
 import groovy.swing.SwingBuilder
 //import groovy.io.File
 import groovy.io.FileType
 
-import java.awt.FlowLayout as FL
+import java.awt.FlowLayout as FL;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Dimension;
-import java.awt.KeyStroke;
+//import java.awt.KeyStroke;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyAdapter;
-import java.awt.Action;
+//import java.awt.Action;
 import java.awt.Font;
 
 import javax.swing.BoxLayout as BXL
@@ -35,6 +36,8 @@ import ChessTree.NotationTranslator
 import ChessTree.ChessTreeSettings
 import ChessTree.PositionInterpreter
 
+println("sadf")
+
 /*************/
 /** Globals **/
 /*************/
@@ -45,12 +48,11 @@ DICTIONARY = chessTreeSettings.DICTIONARY
 
 LANGUAGE_CURRENT = chessTreeSettings.get("chesstree_language").toString()
 
-ROOT = this.node.map.root
-
 /* FUNCTIONS */
 
 /* Static functions for ClipBoard handling */ 
 static String getClipboardContents(){    return Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null).getTransferData(DataFlavor.stringFlavor)    }
+
 
 def showPGNFileChooser() {
     if(guiPGNFolderRB.selected) {
@@ -314,7 +316,11 @@ while (pgn.length() > 0) {
     if (nag != "") {
         currentNode["NAG"] = nag
         pgnNotation.getNAGs().each {
-            def nagTxt = NotationTranslator.getNAG((it-"\$").toInteger(), "sym")
+            def nagTxt = (it-"\$")
+            if (nagTxt.isInteger()) nagTxt = nagTxt.toInteger();
+            else nagTxt = 0;
+            nagTxt = NotationTranslator.getNAG(nagTxt, "sym")
+            
             if (currentNode.details) {
                 currentNode.setDetailsText("${currentNode.details.to.plain}\n${nagTxt}")
             } else {
@@ -327,7 +333,8 @@ while (pgn.length() > 0) {
         commentsNode = currentNode.createChild("")
         commentsNode.style.setName("Explanation")
         commentsNode.setFree(true)
-        commentsNode.setDetailsText(comments)
+        //commentsNode.setDetailsText(comments)
+        commentsNode.setText(comments)
         commentsNode.setHorizontalShift(70)
         commentsNode.setVerticalShift(10)
     }
@@ -336,6 +343,7 @@ while (pgn.length() > 0) {
     pgn = pgnNotation.getRemainingText()
     pgnNotation.set(pgn)
 }
+
 
 
 return 0

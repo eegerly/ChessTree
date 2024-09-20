@@ -46,6 +46,7 @@ NUMBERING_CURRENT = cts.get("chesstree_numbering")
 NAG_CURRENT = cts.get("chesstree_NAG")
 CONNECTOR_CURRENT = cts.get("chesstree_connectors")
 ODDS_CURRENT = cts.get("chesstree_odds")
+BOARDSIZE_CURRENT = cts.get("chesstree_board_size")
 
 /* Globals for odds image updater */ 
 mapfile=this.node.map.file
@@ -107,6 +108,19 @@ def dial = s.dialog(title:"ChessTree settings...", id:'myDialog', modal:true,
         }  		
         panel(alignmentX:0f) {
             flowLayout(alignment:FL.LEFT)
+            label('Board size', preferredSize: [120, 24], mouseClicked:{disableItem(guiCategory)})
+			comboBox(id: 'chesstree_board_size', preferredSize: [100, 24], editable:true,
+				items:cts.SUPPORTED_BOARDSIZE.collect{it.value}, selectedItem:cts.SUPPORTED_BOARDSIZE[BOARDSIZE_CURRENT]) 
+        }
+        
+        panel(alignmentX:0f) {
+            flowLayout(alignment:FL.LEFT)
+            label('Apply for full tree ChessTree (not only current branch)', preferredSize: [120, 24], mouseClicked:{disableItem(guiCategory)})
+			checkBox(id: 'chesstree_updateAll', preferredSize: [100, 24], selected:false) 
+        } 
+                
+        panel(alignmentX:0f) {
+            flowLayout(alignment:FL.LEFT)
             button('Save & Apply', preferredSize:[120, 24],
                    actionPerformed:{
                        vars.dialogResult = 'save&apply'
@@ -132,36 +146,44 @@ def dial = s.dialog(title:"ChessTree settings...", id:'myDialog', modal:true,
 /*************/
 /**** Main ***/ 
 /*************/
-logger.createLogger() 
-
-
 if (vars.dialogResult == 'save&apply') {
     /* Handle received data */
-
     def language_next = cts.SUPPORTED_LANGUAGES.find{it.value == vars["chesstree_language"].getSelectedItem()}.key
     def numbering_next = cts.SUPPORTED_NUMBERING.find{it.value == vars["chesstree_numbering"].getSelectedItem()}.key
     def NAG_next = cts.SUPPORTED_NAG.find{it.value == vars["chesstree_NAG"].getSelectedItem()}.key
     def connector_next = cts.SUPPORTED_CONNECTOR.find{it.value == vars["chesstree_connectors"].getSelectedItem()}.key
     def odds_next = cts.SUPPORTED_ODDS.find{it.value == vars["chesstree_odds"].getSelectedItem()}.key
-
-    if ((LANGUAGE_CURRENT != language_next) || (NUMBERING_CURRENT != numbering_next)) {
+    def boardsize_next = cts.SUPPORTED_BOARDSIZE.find{it.value == vars["chesstree_board_size"].getSelectedItem()}.key
+    
+    def updatedBranch=vars["chesstree_updateAll"].selected?ROOT:this.node
+    
+    if ((LANGUAGE_CURRENT != language_next) || 
+        (NUMBERING_CURRENT != numbering_next) ||
+        (true != vars["chesstree_updateAll"].selected)) { /* Update branch anyway */
         // notation text modification is needed
-        updateNotation(language_next, numbering_next)
+        updateNotation(updatedBranch, language_next, numbering_next)
     }
     
     if (NAG_CURRENT != NAG_next) {
         // TODO: updateDetails(hide/show)...
+        // TODO: use updatedBranch
     }
     
     if (ODDS_CURRENT != odds_next) {
+        // TODO: use updatedBranch
         oddsView = new OddsView(this.node.map)
         oddsView.updateCharts(odds_next=="show")
     }
     if (CONNECTOR_CURRENT != connector_next) {
+        // TODO: use updatedBranch
         connectorView = new ConnectorView(this.node.map)
         connectorView.updateConnectors(connector_next=="freq")
     }
     
+    if (BOARDSIZE_CURRENT != language_next) {
+        // TODO update board size on each node having board
+        // TODO: use updatedBranch
+    }
     
     /* Update properties */
     saveSettings(vars)
@@ -178,6 +200,7 @@ return 0
 def saveSettings(vars) {
     cts.getSupportedProperties().each{
         def value = ""
+        if (vars[it] == null) println "ERROR: " + it
         value = vars[it].getSelectedItem()
         cts.setByValue(it, value)
     }
@@ -187,13 +210,14 @@ def saveSettings(vars) {
 
 
 
-def updateNotation(language_next, numbering_next) {
+def updateNotation(updatedBranch, language_next, numbering_next) {
     def notation = new Notation("", LANGUAGE_CURRENT)
     /* Translate each node */
-    c.findAll{it.hasStyle("White moves") || it.hasStyle("Black moves")}.each {aNode->
+    updatedBranch.findAll().findAll{it.hasStyle("White moves") || it.hasStyle("Black moves")}.each {aNode->
         /* Breadth first order guarantees existence FEN tag of parent */
-        def fen = PositionInterpreter.FEN_DEFAULT
+        def fen = PositionInterpreter.FEN_EMPTY
         
+        /* Parent's FEN is needed in order to get correct FEN for current move, and calculate positionAfterMove. */
         if (aNode.parent != null ) {
             if (!aNode.parent.attributes.getNames().contains("FEN")) {
                 aNode.parent["FEN"] = PositionInterpreter.FEN_STARTING
@@ -203,8 +227,7 @@ def updateNotation(language_next, numbering_next) {
                 
         def text = aNode.getDisplayedText()
         if ((text != null) && (text != "")) {
-            notation.position.set(fen)
-            notation.set(text)
+            notation.setWithFEN(fen.toString(), text)
         }
         text = "<html><body>"
         if (NUMBERING_CURRENT != numbering_next) {

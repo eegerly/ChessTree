@@ -1,5 +1,5 @@
 package ChessTree
-def class NotationTranslator {
+class NotationTranslator {
     public static final SUPPORTED_LANGUAGES = ["eng":"English", "sym":"Symbolic", "fre":"French", "hun":"Hungarian"]
     public static final DICTIONARY = ["white" : [
         ["sym":"\u2654", "eng":"K", "fre":"R", "hun":"K" ], // ♔
@@ -281,7 +281,8 @@ def class NotationTranslator {
     
     
     static getNAG(nag, lang) {
-        if (NAGs[nag][lang] == null ) { return NAGs[nag].eng}
+        if (NAGs[nag] == null ) { return "ERROR: non-existing NAG"+nag}
+        else if (NAGs[nag][lang] == null ) { return NAGs[nag].eng}
         else if (NAGs[nag][lang].isEmpty()) { return NAGs[nag].eng}
         else { return NAGs[nag][lang]}
     }

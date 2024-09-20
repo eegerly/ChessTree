@@ -29,7 +29,7 @@
             <conjunct_condition>
                 <script_condition user_name="IsMove">
                     <script>P_NUMBERING = /(\d+\.(\.\.)?)/&#xd;
-P_MOVE = /(([0O]-[0O](-[0O])?)|(.?(([a-h][1-8]?)?x?)?[a-h][1-8](=.)?))[\+\#]?/&#xd;
+P_MOVE = /(([0O]-[0O](-[0O])?)|(.?(([a-h]?[1-8]?)?x?)?[a-h][1-8](=.)?))[\+\#]?/&#xd;
 P_NAG = /((\$\d{1,3})|([^\w]{0,2}))/&#xd;
 notationPattern = /(?msu)^$P_NUMBERING?\s*$P_MOVE\s*$P_NAG?/&#xd;
 &#xd;
@@ -67,7 +67,7 @@ else {&#xd;
             <conjunct_condition>
                 <script_condition user_name="IsMove">
                     <script>P_NUMBERING = /(\d+\.(\.\.)?)/&#xd;
-P_MOVE = /(([0O]-[0O](-[0O])?)|(.?(([a-h][1-8]?)?x?)?[a-h][1-8](=.)?))[\+\#]?/&#xd;
+P_MOVE = /(([0O]-[0O](-[0O])?)|(.?(([a-h]?[1-8]?)?x?)?[a-h][1-8](=.)?))[\+\#]?/&#xd;
 P_NAG = /((\$\d{1,3})|([^\w]{0,2}))/&#xd;
 notationPattern = /(?msu)^$P_NUMBERING?\s*$P_MOVE\s*$P_NAG?/&#xd;
 &#xd;
