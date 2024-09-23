@@ -1,28 +1,34 @@
-<map version="freeplane 1.7.0">
-<!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
-<node TEXT="ChessTree" FOLDED="false" ID="ID_1869326925" CREATED="1521562113754" MODIFIED="1578504823200" LINK="http://noUpdateURL.com" BACKGROUND_COLOR="#97c7dc" STYLE="oval">
+<map version="freeplane 1.12.1">
+<!--To view this file, download free mind mapping software Freeplane from https://www.freeplane.org -->
+<node TEXT="ChessTree" FOLDED="false" ID="ID_1869326925" CREATED="1521562113754" MODIFIED="1727087586505" LINK="http://noUpdateURL.com" BACKGROUND_COLOR="#97c7dc" STYLE="oval">
 <font SIZE="16" BOLD="true" ITALIC="true"/>
 <hook NAME="MapStyle">
-    <properties fit_to_viewport="false" show_icon_for_attributes="true" show_note_icons="true" edgeColorConfiguration="#808080ff,#ff0000ff,#0000ffff,#00ff00ff,#ff00ffff,#00ffffff,#7c0000ff,#00007cff,#007c00ff,#7c007cff,#007c7cff,#7c7c00ff"/>
+    <properties show_icon_for_attributes="true" edgeColorConfiguration="#808080ff,#ff0000ff,#0000ffff,#00ff00ff,#ff00ffff,#00ffffff,#7c0000ff,#00007cff,#007c00ff,#7c007cff,#007c7cff,#7c7c00ff" show_note_icons="true" fit_to_viewport="false" show_tags="UNDER_NODES"/>
+    <tags category_separator="::"/>
 
 <map_styles>
-<stylenode LOCALIZED_TEXT="styles.root_node" STYLE="oval" UNIFORM_SHAPE="true" VGAP_QUANTITY="24.0 pt">
+<stylenode LOCALIZED_TEXT="styles.root_node" STYLE="oval" UNIFORM_SHAPE="true" VGAP_QUANTITY="24 pt">
 <font SIZE="24"/>
-<stylenode LOCALIZED_TEXT="styles.predefined" POSITION="right" STYLE="bubble">
-<stylenode LOCALIZED_TEXT="default" ICON_SIZE="12.0 pt" COLOR="#000000" STYLE="fork">
+<stylenode LOCALIZED_TEXT="styles.predefined" POSITION="bottom_or_right" STYLE="bubble">
+<stylenode LOCALIZED_TEXT="default" ID="ID_714095377" ICON_SIZE="12 pt" COLOR="#000000" STYLE="fork">
+<arrowlink SHAPE="CUBIC_CURVE" COLOR="#000000" WIDTH="2" TRANSPARENCY="200" DASH="" FONT_SIZE="9" FONT_FAMILY="SansSerif" DESTINATION="ID_714095377" STARTARROW="NONE" ENDARROW="DEFAULT"/>
 <font NAME="SansSerif" SIZE="10" BOLD="false" ITALIC="false"/>
 </stylenode>
 <stylenode LOCALIZED_TEXT="defaultstyle.details"/>
+<stylenode LOCALIZED_TEXT="defaultstyle.tags">
+<font SIZE="10"/>
+</stylenode>
 <stylenode LOCALIZED_TEXT="defaultstyle.attributes">
 <font SIZE="9"/>
 </stylenode>
 <stylenode LOCALIZED_TEXT="defaultstyle.note" COLOR="#000000" BACKGROUND_COLOR="#ffffff" TEXT_ALIGN="LEFT"/>
+<stylenode LOCALIZED_TEXT="defaultstyle.selection" BACKGROUND_COLOR="#4e85f8" BORDER_COLOR_LIKE_EDGE="false" BORDER_COLOR="#4e85f8"/>
 <stylenode LOCALIZED_TEXT="defaultstyle.floating">
 <edge STYLE="hide_edge"/>
 <cloud COLOR="#f0f0f0" SHAPE="ROUND_RECT"/>
 </stylenode>
 </stylenode>
-<stylenode LOCALIZED_TEXT="styles.user-defined" POSITION="right" STYLE="bubble">
+<stylenode LOCALIZED_TEXT="styles.user-defined" POSITION="bottom_or_right" STYLE="bubble">
 <stylenode LOCALIZED_TEXT="styles.topic" COLOR="#18898b" STYLE="fork">
 <font NAME="Liberation Sans" SIZE="10" BOLD="true"/>
 </stylenode>
@@ -36,8 +42,8 @@
 <icon BUILTIN="yes"/>
 </stylenode>
 </stylenode>
-<stylenode LOCALIZED_TEXT="styles.AutomaticLayout" POSITION="right" STYLE="bubble">
-<stylenode LOCALIZED_TEXT="AutomaticLayout.level.root" COLOR="#000000" STYLE="oval" SHAPE_HORIZONTAL_MARGIN="10.0 pt" SHAPE_VERTICAL_MARGIN="10.0 pt">
+<stylenode LOCALIZED_TEXT="styles.AutomaticLayout" POSITION="bottom_or_right" STYLE="bubble">
+<stylenode LOCALIZED_TEXT="AutomaticLayout.level.root" COLOR="#000000" STYLE="oval" SHAPE_HORIZONTAL_MARGIN="10 pt" SHAPE_VERTICAL_MARGIN="10 pt">
 <font SIZE="18"/>
 </stylenode>
 <stylenode LOCALIZED_TEXT="AutomaticLayout.level,1" COLOR="#0033ff">
@@ -64,15 +70,14 @@
 </map_styles>
 </hook>
 <hook NAME="AutomaticEdgeColor" COUNTER="11" RULE="ON_BRANCH_CREATION"/>
-<attribute_layout NAME_WIDTH="107.99999678134928 pt" VALUE_WIDTH="134.9999959766866 pt"/>
+<attribute_layout NAME_WIDTH="108 pt" VALUE_WIDTH="135 pt"/>
 <attribute NAME="name" VALUE="chessTree"/>
 <attribute NAME="version" VALUE="0.0.1"/>
 <attribute NAME="author" VALUE="Gergely Kiss"/>
-<attribute NAME="freeplaneVersionFrom" VALUE="1.7.4"/>
+<attribute NAME="freeplaneVersionFrom" VALUE="1.12.6"/>
 <attribute NAME="freeplaneVersionTo" VALUE=""/>
-<attribute NAME="updateUrl" VALUE="http://noUpdateURL.com" OBJECT="java.net.URI|http://noUpdateURL.com"/>
+<attribute NAME="updateUrl" VALUE="https://github.com/eegerly/ChessTree/blob/master/"/>
 <richcontent TYPE="NOTE">
-
 <html>
   <head>
     
@@ -105,12 +110,10 @@
       </li>
     </ul>
   </body>
-</html>
-</richcontent>
-<node TEXT="description" POSITION="left" ID="ID_752418840" CREATED="1521562135104" MODIFIED="1578504823222">
+</html></richcontent>
+<node TEXT="description" POSITION="top_or_left" ID="ID_752418840" CREATED="1521562135104" MODIFIED="1578504823222">
 <edge COLOR="#ff0000"/>
 <richcontent TYPE="NOTE">
-
 <html>
   <head>
     
@@ -126,8 +129,7 @@
       To translate the description you have to define a translation for the key 'addons.${name}.description'.
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <node ID="ID_281132702" CREATED="1521563587956" MODIFIED="1521563734014"><richcontent TYPE="NODE">
 
 <html>
@@ -150,13 +152,12 @@
   </body>
 </html>
 </richcontent>
-<attribute_layout VALUE_WIDTH="134.9999959766866 pt"/>
+<attribute_layout VALUE_WIDTH="135 pt"/>
 </node>
 </node>
-<node TEXT="changes" POSITION="left" ID="ID_845634758" CREATED="1521562135109" MODIFIED="1578504823227">
+<node TEXT="changes" POSITION="top_or_left" ID="ID_845634758" CREATED="1521562135109" MODIFIED="1578504823227">
 <edge COLOR="#0000ff"/>
 <richcontent TYPE="NOTE">
-
 <html>
   <head>
     
@@ -166,13 +167,11 @@
       Change log of this add-on: append one node for each noteworthy version and put the details for each version into a child node.
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 </node>
-<node TEXT="license" FOLDED="true" POSITION="left" ID="ID_1331637895" CREATED="1521562135113" MODIFIED="1578504823230">
+<node TEXT="license" FOLDED="true" POSITION="top_or_left" ID="ID_1331637895" CREATED="1521562135113" MODIFIED="1578504823230">
 <edge COLOR="#00ff00"/>
 <richcontent TYPE="NOTE">
-
 <html>
   <head>
     
@@ -188,14 +187,12 @@
       The License text has to be entered as a child of the <i>'license'</i>&#160;node, either as plain text or as HTML.
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <node TEXT="&#xa;This add-on is free software: you can redistribute it and/or modify&#xa;it under the terms of the GNU General Public License as published by&#xa;the Free Software Foundation, either version 2 of the License, or&#xa;(at your option) any later version.&#xa;&#xa;This program is distributed in the hope that it will be useful,&#xa;but WITHOUT ANY WARRANTY; without even the implied warranty of&#xa;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the&#xa;GNU General Public License for more details.&#xa;" ID="ID_1555852289" CREATED="1521562135117" MODIFIED="1521566722845"/>
 </node>
-<node TEXT="preferences.xml" POSITION="left" ID="ID_136508631" CREATED="1521562135121" MODIFIED="1578504823234">
+<node TEXT="preferences.xml" POSITION="top_or_left" ID="ID_136508631" CREATED="1521562135121" MODIFIED="1578504823234">
 <edge COLOR="#ff00ff"/>
 <richcontent TYPE="NOTE">
-
 <html>
   <head>
     
@@ -208,13 +205,11 @@
       <font color="#000000" face="SansSerif, sans-serif">Every property in the configuration should receive a default value in <i>default.properties</i>&#160;node.</font>
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 </node>
-<node TEXT="default.properties" POSITION="left" ID="ID_1494843788" CREATED="1521562135125" MODIFIED="1578504823238">
+<node TEXT="default.properties" POSITION="top_or_left" ID="ID_1494843788" CREATED="1521562135125" MODIFIED="1578504823238">
 <edge COLOR="#00ffff"/>
 <richcontent TYPE="NOTE">
-
 <html>
   <head>
     
@@ -232,14 +227,12 @@
       </li>
     </ul>
   </body>
-</html>
-</richcontent>
-<attribute_layout VALUE_WIDTH="250.0 pt"/>
+</html></richcontent>
+<attribute_layout VALUE_WIDTH="250 pt"/>
 </node>
-<node TEXT="translations" POSITION="left" ID="ID_461099033" CREATED="1521562135130" MODIFIED="1578504823241">
+<node TEXT="translations" POSITION="top_or_left" ID="ID_461099033" CREATED="1521562135130" MODIFIED="1578504823241">
 <edge COLOR="#7c0000"/>
 <richcontent TYPE="NOTE">
-
 <html>
   <head>
     
@@ -260,11 +253,10 @@
       </li>
     </ul>
   </body>
-</html>
-</richcontent>
-<attribute_layout VALUE_WIDTH="250.0 pt"/>
-<node TEXT="en" ID="ID_1779268052" CREATED="1521562135133" MODIFIED="1578239400182" MAX_WIDTH="322.49999056756525 pt" MIN_WIDTH="322.49999056756525 pt">
-<attribute_layout NAME_WIDTH="155.99999535083785 pt" VALUE_WIDTH="123.74999631196272 pt"/>
+</html></richcontent>
+<attribute_layout VALUE_WIDTH="250 pt"/>
+<node TEXT="en" ID="ID_1779268052" CREATED="1521562135133" MODIFIED="1578239400182" MAX_WIDTH="322.49999 pt" MIN_WIDTH="322.49999 pt">
+<attribute_layout NAME_WIDTH="156 pt" VALUE_WIDTH="123.75 pt"/>
 <attribute NAME="addons.${name}" VALUE="ChessTree"/>
 <attribute NAME="addons.${name}.updateChessTree" VALUE="Update ChessTree..."/>
 <attribute NAME="addons.${name}.pasteBranch" VALUE="Paste branch..."/>
@@ -272,10 +264,9 @@
 <attribute NAME="addons.${name}.compareTrees" VALUE="Compare trees"/>
 </node>
 </node>
-<node TEXT="deinstall" POSITION="left" ID="ID_1510539068" CREATED="1521562135137" MODIFIED="1578504823243">
+<node TEXT="deinstall" POSITION="top_or_left" ID="ID_1510539068" CREATED="1521562135137" MODIFIED="1578504823243">
 <edge COLOR="#00007c"/>
 <richcontent TYPE="NOTE">
-
 <html>
   <head>
     
@@ -285,9 +276,8 @@
       List of files and/or directories to remove on uninstall
     </p>
   </body>
-</html>
-</richcontent>
-<attribute_layout NAME_WIDTH="52.499998435378124 pt" VALUE_WIDTH="271.4999919086697 pt"/>
+</html></richcontent>
+<attribute_layout NAME_WIDTH="52.5 pt" VALUE_WIDTH="271.49999 pt"/>
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}.script.xml"/>
 <attribute NAME="delete" VALUE="${installationbase}/templates/template.ChessTree.mm"/>
 <attribute NAME="delete" VALUE="${installationbase}/lib/ChessTree.jar"/>
@@ -296,10 +286,9 @@
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/copyPGN.groovy"/>
 <attribute NAME="delete" VALUE="${installationbase}/addons/${name}/scripts/compareTrees.groovy"/>
 </node>
-<node TEXT="scripts" POSITION="right" ID="ID_836008002" CREATED="1521562135167" MODIFIED="1578504823250">
+<node TEXT="scripts" POSITION="bottom_or_right" ID="ID_836008002" CREATED="1521562135167" MODIFIED="1578504823250">
 <edge COLOR="#007c00"/>
 <richcontent TYPE="NOTE">
-
 <html>
   <head>
     
@@ -414,10 +403,9 @@
       &#160;&#160;- In any case set execute_scripts_without_asking to true unless you want to annoy users.
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <node TEXT="pasteBranch.groovy" ID="ID_1708118480" CREATED="1522494712280" MODIFIED="1578047836752">
-<attribute_layout NAME_WIDTH="146.2499956414105 pt" VALUE_WIDTH="134.9999959766866 pt"/>
+<attribute_layout NAME_WIDTH="146.25 pt" VALUE_WIDTH="135 pt"/>
 <attribute NAME="menuTitleKey" VALUE="addons.${name}.pasteBranch"/>
 <attribute NAME="menuLocation" VALUE="/menu_bar/addons.${name}"/>
 <attribute NAME="executionMode" VALUE="on_single_node"/>
@@ -429,7 +417,7 @@
 <attribute NAME="execute_scripts_without_network_restriction" VALUE="true"/>
 </node>
 <node TEXT="updateChessTree.groovy" ID="ID_728751355" CREATED="1538315999856" MODIFIED="1578047832451">
-<attribute_layout VALUE_WIDTH="134.9999959766866 pt"/>
+<attribute_layout VALUE_WIDTH="135 pt"/>
 <attribute NAME="menuTitleKey" VALUE="addons.${name}.updateChessTree"/>
 <attribute NAME="menuLocation" VALUE="/menu_bar/addons.${name}"/>
 <attribute NAME="executionMode" VALUE="on_single_node"/>
@@ -441,7 +429,7 @@
 <attribute NAME="execute_scripts_without_network_restriction" VALUE="true"/>
 </node>
 <node TEXT="copyPGN.groovy" ID="ID_520278260" CREATED="1578047737614" MODIFIED="1578047866316">
-<attribute_layout VALUE_WIDTH="250.0 pt"/>
+<attribute_layout VALUE_WIDTH="250 pt"/>
 <attribute NAME="menuTitleKey" VALUE="addons.${name}.copyPGN"/>
 <attribute NAME="menuLocation" VALUE="/menu_bar/addons.${name}"/>
 <attribute NAME="executionMode" VALUE="on_single_node"/>
@@ -453,7 +441,7 @@
 <attribute NAME="execute_scripts_without_network_restriction" VALUE="true"/>
 </node>
 <node TEXT="compareTrees.groovy" ID="ID_627302378" CREATED="1578239373684" MODIFIED="1578585827221">
-<attribute_layout VALUE_WIDTH="250.0 pt"/>
+<attribute_layout VALUE_WIDTH="250 pt"/>
 <attribute NAME="menuTitleKey" VALUE="addons.${name}.compareTrees"/>
 <attribute NAME="menuLocation" VALUE="/menu_bar/addons.${name}"/>
 <attribute NAME="executionMode" VALUE="on_single_node"/>
@@ -465,10 +453,9 @@
 <attribute NAME="execute_scripts_without_network_restriction" VALUE="true"/>
 </node>
 </node>
-<node TEXT="lib" POSITION="right" ID="ID_328124690" CREATED="1521562135185" MODIFIED="1578504823289">
+<node TEXT="lib" POSITION="bottom_or_right" ID="ID_328124690" CREATED="1521562135185" MODIFIED="1578504823289">
 <edge COLOR="#7c007c"/>
 <richcontent TYPE="NOTE">
-
 <html>
   <head>
     
@@ -502,14 +489,12 @@
       &#160;- The files will be processed in the sequence as seen in the map.
     </p>
   </body>
-</html>
-</richcontent>
-<attribute_layout VALUE_WIDTH="250.0 pt"/>
+</html></richcontent>
+<attribute_layout VALUE_WIDTH="250 pt"/>
 </node>
-<node TEXT="zips" POSITION="right" ID="ID_188436602" CREATED="1521562135191" MODIFIED="1578504823294">
+<node TEXT="zips" POSITION="bottom_or_right" ID="ID_188436602" CREATED="1521562135191" MODIFIED="1578504823294">
 <edge COLOR="#007c7c"/>
 <richcontent TYPE="NOTE">
-
 <html>
   <head>
     
@@ -543,18 +528,16 @@
       &#160;- The files will be processed in the sequence as seen in the map.
     </p>
   </body>
-</html>
-</richcontent>
-<attribute_layout VALUE_WIDTH="250.0 pt"/>
+</html></richcontent>
+<attribute_layout VALUE_WIDTH="250 pt"/>
 <node TEXT="templates" ID="ID_1849114914" CREATED="1521565216661" MODIFIED="1521565216662"/>
 <node TEXT="lib" ID="ID_1750925238" CREATED="1522351097503" MODIFIED="1522351097505">
-<attribute_layout VALUE_WIDTH="250.0 pt"/>
+<attribute_layout VALUE_WIDTH="250 pt"/>
 </node>
 </node>
-<node TEXT="images" POSITION="right" ID="ID_209340361" CREATED="1521562135195" MODIFIED="1578504823302">
+<node TEXT="images" POSITION="bottom_or_right" ID="ID_209340361" CREATED="1521562135195" MODIFIED="1578504823302">
 <edge COLOR="#7c7c00"/>
 <richcontent TYPE="NOTE">
-
 <html>
   <head>
     
@@ -584,9 +567,8 @@
       Images can be added automatically by releaseAddOn.groovy or must be uploaded into the map via the script <i>Tools-&gt;Scripts-&gt;Insert Binary</i>&#160;since they have to be (base64) encoded as simple strings.
     </p>
   </body>
-</html>
-</richcontent>
-<attribute_layout VALUE_WIDTH="250.0 pt"/>
+</html></richcontent>
+<attribute_layout VALUE_WIDTH="250 pt"/>
 </node>
 </node>
 </map>
