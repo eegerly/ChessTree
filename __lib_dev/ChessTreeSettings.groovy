@@ -1,6 +1,6 @@
 package ChessTree
 
-def class ChessTreeSettings {
+class ChessTreeSettings {
     /* Default setting is the first in each "SUPPORTED_*" attribute */
     public static final SUPPORTED_LANGUAGES = NotationTranslator.SUPPORTED_LANGUAGES
     public static final DICTIONARY = NotationTranslator.DICTIONARY

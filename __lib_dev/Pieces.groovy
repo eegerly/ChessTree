@@ -204,9 +204,9 @@ class King extends AbstractPiece {
 class Pawn extends AbstractPiece {
     def getName() {return "Pawn"}
     public Pawn(color, position) {
-        position[0] = [1,[position[0],6].min()].max()
-        position[1] = [1,[position[1],6].min()].max()
         super(color, position)
+        this.position[0] = [1,[this.position[0],6].min()].max()
+        this.position[1] = [1,[this.position[1],6].min()].max()
     }
     
     def getPossibleMoves(square) {

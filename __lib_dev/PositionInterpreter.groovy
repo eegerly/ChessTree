@@ -1,6 +1,6 @@
 package ChessTree
 
-def class Board {
+class Board {
     def board = ["--------","--------","--------","--------","--------","--------","--------","--------"]
     public Board(){
         /* board is default empty board */
@@ -45,7 +45,7 @@ def class Board {
     }
 }
 
-def class PositionInterpreter {
+class PositionInterpreter {
     public static final FEN_EMPTY = "8/8/8/8/8/8/8/8 w KQkq - 0 1" // empty board with no move
     public static final FEN_STARTING = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" // starting position
     def FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"

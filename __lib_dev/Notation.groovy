@@ -1,6 +1,6 @@
 package ChessTree
 
-def class Notation {
+class Notation {
     private notation = ""
     private move = ""
     private moveEng = "" //for PositionInterpreter.doMove(), 
@@ -136,12 +136,12 @@ def class Notation {
         
         if (branchingStarts()) { // Branch starts : at least one move is assumed after one "(", no consecutive "("-s!
             if (branchingEnds()) {
-                copyObject(position, nextPosStackAlt[0])
+                copyPositionObject(position, nextPosStackAlt[0])
             } else {
                 nextPosStackAlt.push( new PositionInterpreter())
-                copyObject(nextPosStackAlt[0], position)
+                copyPositionObject(nextPosStackAlt[0], position)
                 nextPosStack.push( new PositionInterpreter())
-                copyObject(nextPosStack[0], positionAfterMove)
+                copyPositionObject(nextPosStack[0], positionAfterMove)
             }
         }
         
@@ -155,14 +155,14 @@ def class Notation {
     } // set
     
     private advancePosition() {        
-        copyObject(position, positionAfterMove)
+        copyPositionObject(position, positionAfterMove)
     }
-    private copyObject(dst, src) {
-        (dst.properties.keySet() - ['class', 'metaClass']).each{dst[it] = src[it]}     
+    private copyPositionObject(dst, src) {
+        (dst.properties.keySet() - ['class', 'metaClass', "FEN_EMPTY", "FEN_STARTING"]).each{dst[it] = src[it]}     
     }
     
     def updatePositionAfterMove() {        
-        copyObject(positionAfterMove, position)
+        copyPositionObject(positionAfterMove, position)
         positionAfterMove.doMove(this.moveEng)
     }
     /* Branching counters for current move : can be used as triggers*/

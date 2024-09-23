@@ -1,20 +1,22 @@
 @echo off
 
-set JDKPath=C:\Program Files\Java\jdk1.8.0_20
-set FPInstallDir=E:\Portables\freeplane-1.9
-set FPUserDir=C:\Users\ger\AppData\Roaming\Freeplane\1.9.x\lib\
+rem Java class file compiler and archiver for freeplane library
+rem =============== Usage =============== 
+rem compile.bat FILE.groovy
+rem FILE.groovy will be compiled as FILE.class and will be archived to <libName>.jar
+
+
+set JDKPath=c:\Program Files\Java\jdk-23\
+set FPInstallDir=c:\Portables\freeplane
+set FPUserDir=C:\Users\ger\AppData\Roaming\Freeplane\1.12.x\lib\
+set groovyVersion=4.0.21
+set freeplanePluginVersion=1.12.6
 set libName=ChessTree
 set addonName=chessTree
 set file=%1
 echo. Compiling %file% ...
 
-set libs=%FPInstallDir%\plugins\org.freeplane.plugin.script\lib\groovy-3.0.8.jar;%FPInstallDir%\plugins\org.freeplane.plugin.script\lib\plugin-1.9.3.jar;%FPInstallDir%\core\org.freeplane.core\lib\freeplaneviewer.jar
-
-rem set libs=%FPInstallDir%\plugins\org.freeplane.plugin.script\lib\groovy-3.0.1.jar;%FPInstallDir%\plugins\org.freeplane.plugin.script\lib\plugin-1.9.0.jar;%FPInstallDir%\core\org.freeplane.core\lib\freeplaneviewer.jar
-
-
-
-
+set libs=%FPInstallDir%\plugins\org.freeplane.plugin.script\lib\groovy-%groovyVersion%.jar;%FPInstallDir%\plugins\org.freeplane.plugin.script\lib\plugin-%freeplanePluginVersion%.jar;%FPInstallDir%\core\org.freeplane.core\lib\freeplaneviewer.jar
 
 java -cp "%libs%" org.codehaus.groovy.tools.FileSystemCompiler ./%file%
 
